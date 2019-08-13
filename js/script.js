@@ -32,7 +32,51 @@ const drawPolygon = points => {
   ctx.stroke();
 };
 
-drawPolygon([{ x: 1000, y: 1000 }, { x: 1000, y: 2000 }, { x: 2000, y: 1000 }]);
+// drawPolygon([{ x: 1000, y: 1000 }, { x: 1000, y: 2000 }, { x: 2000, y: 2000 }]);
+
+/**
+ * GET RANDOM NUMBER BETWEEN
+ */
+
+const getRandomNumberBetween = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+// let points = [];
+// for (let i = 0; i < 3; i++) {
+//   points.push({
+//     x: getRandomNumberBetween(0, canvas.width),
+//     y: getRandomNumberBetween(0, canvas.height)
+//   });
+// }
+// drawPolygon(points);
+
+const points = [
+  {
+    x: getRandomNumberBetween(0, canvas.width),
+    y: getRandomNumberBetween(0, canvas.height)
+  }
+];
+const distance = 500;
+for (let i = 0; i < 2; i++) {
+  const previousPoint = points.slice(-1)[0];
+  const nextPoint = {
+    x: getRandomNumberBetween(
+      previousPoint.x - distance < 0 ? 0 : previousPoint.x - distance,
+      previousPoint.x + distance > canvas.width
+        ? canvas.width
+        : previousPoint.x + distance
+    ),
+    y: getRandomNumberBetween(
+      previousPoint.y - distance < 0 ? 0 : previousPoint.y - distance,
+      previousPoint.y + distance > canvas.height
+        ? canvas.height
+        : previousPoint.y + distance
+    )
+  };
+  points.push(nextPoint);
+}
+drawPolygon(points);
 
 /**
  * DISPLAY CANVAS
