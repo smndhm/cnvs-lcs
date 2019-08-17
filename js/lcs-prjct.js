@@ -18,7 +18,8 @@ const settings = {
   },
   vertex: {
     distance: 5,
-    nb: 3000
+    nb: 3000,
+    color: "#ffffff"
   }
 };
 
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", event => {
   document.body.append(canvas);
 
   // DRAW ON CANVAS
-  // drawTriangleAfterNewVertex(10000);
-  // drawTriangleForEachVertex(3000);
-  drawTriangleAround(settings.vertex.nb);
+  drawTriangleAfterNewVertex();
+  // drawTriangleForEachVertex();
+  // drawTriangleAround();
 });
