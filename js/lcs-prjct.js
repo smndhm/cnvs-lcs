@@ -3,8 +3,8 @@
  */
 const settings = {
   canvas: {
-    width: 2200,
-    height: 2200,
+    width: 2100,
+    height: 2970,
     padding: 100
   },
   color: {
@@ -15,13 +15,16 @@ const settings = {
     width: 5,
     cap: "square",
     join: "round"
+  },
+  vertex: {
+    distance: 5,
+    nb: 3000
   }
 };
 
 /**
- * INIT CANVAS
+ * DISPLAY CANVAS
  */
-
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
 
@@ -38,11 +41,12 @@ ctx.lineJoin = settings.line.join;
 //ADD BACKGROUND
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-const vertices = new Set();
-
-/**
- * DISPLAY CANVAS
- */
 document.addEventListener("DOMContentLoaded", event => {
+  // ADD CANVAS
   document.body.append(canvas);
+
+  // DRAW ON CANVAS
+  // drawTriangleAfterNewVertex(10000);
+  // drawTriangleForEachVertex(3000);
+  drawTriangleAround(settings.vertex.nb);
 });

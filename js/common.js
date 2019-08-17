@@ -26,22 +26,22 @@ const getRandomNumberBetween = (min, max) => {
  * GET RANDOM VERTEX
  */
 
-const getRandomVertex = (coordsA, coordsB) => {
+const getRandomVertex = area => {
   return {
-    x: getRandomNumberBetween(coordsA.x, coordsB.x),
-    y: getRandomNumberBetween(coordsA.y, coordsB.y)
+    x: getRandomNumberBetween(area[0].x, area[1].x),
+    y: getRandomNumberBetween(area[0].y, area[1].y)
   };
 };
 
 /**
  * IS VERTEX IN CANVAS
  */
-const isVertexInCanvas = vertex => {
+const isVertexInArea = (vertex, area) => {
   return (
-    vertex.x > settings.canvas.padding &&
-    vertex.x < settings.canvas.width - settings.canvas.padding &&
-    vertex.y > settings.canvas.padding &&
-    vertex.y < settings.canvas.height - settings.canvas.padding
+    vertex.x > area[0].x &&
+    vertex.x < area[1].x &&
+    vertex.y > area[0].y &&
+    vertex.y < area[1].y
   );
 };
 
@@ -71,4 +71,19 @@ const getClosestVertices = (vertices, vertex, count) => {
 
 const getRandomHexColor = () => {
   return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
+};
+
+/**
+ * GET VERTICES AREA
+ */
+
+const getVerticesArea = vertices => {
+  let area = [{ x: null, y: null }, { x: null, y: null }];
+  for (vertex of vertices) {
+    area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x || vertex.x;
+    area[0].y = vertex.y < area[0].y ? vertex.y : area[0].y || vertex.y;
+    area[1].x = vertex.x > area[1].x ? vertex.x : area[1].x || vertex.x;
+    area[1].y = vertex.y > area[1].y ? vertex.y : area[1].y || vertex.y;
+  }
+  return area;
 };
