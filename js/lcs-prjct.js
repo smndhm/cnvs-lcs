@@ -1,29 +1,4 @@
 /**
- * SETTINGS
- */
-const settings = {
-  canvas: {
-    width: 2100,
-    height: 2970,
-    padding: 100
-  },
-  color: {
-    fill: "#ffffff",
-    stroke: "#000000"
-  },
-  line: {
-    width: 5,
-    cap: "square",
-    join: "round"
-  },
-  vertex: {
-    distance: 5,
-    nb: 3000,
-    color: "#ffffff"
-  }
-};
-
-/**
  * DISPLAY CANVAS
  */
 let canvas = document.createElement("canvas");
@@ -32,9 +7,34 @@ let ctx = canvas.getContext("2d");
 canvas.width = settings.canvas.width;
 canvas.height = settings.canvas.height;
 
-ctx.fillStyle = settings.color.fill;
+if (Array.isArray(settings.color.fill)) {
+  let linearGradient = ctx.createLinearGradient(
+    0,
+    0,
+    0,
+    settings.canvas.height
+  );
+  ctx.fillStyle = linearGradient;
+  linearGradient.addColorStop(0, settings.color.fill[0]);
+  linearGradient.addColorStop(1, settings.color.fill[1]);
+} else {
+  ctx.fillStyle = settings.color.fill;
+}
 
-ctx.strokeStyle = settings.color.stroke;
+if (Array.isArray(settings.color.stroke)) {
+  let linearGradient = ctx.createLinearGradient(
+    settings.canvas.padding,
+    settings.canvas.padding,
+    settings.canvas.padding,
+    settings.canvas.height - settings.canvas.padding
+  );
+  ctx.strokeStyle = linearGradient;
+  linearGradient.addColorStop(0, settings.color.stroke[0]);
+  linearGradient.addColorStop(1, settings.color.stroke[1]);
+} else {
+  ctx.strokeStyle = settings.color.stroke;
+}
+
 ctx.lineWidth = settings.line.width;
 ctx.lineCap = settings.line.cap;
 ctx.lineJoin = settings.line.join;
@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", event => {
   document.body.append(canvas);
 
   // DRAW ON CANVAS
-  drawTriangleAfterNewVertex();
+  drawTriangleAfterNewVertex(settings);
   // drawTriangleForEachVertex();
   // drawTriangleAround();
+  // drawDelaunay();
 });
