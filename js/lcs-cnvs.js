@@ -69,10 +69,10 @@ export let LcsCnvs;
   };
 
   /**
-   * GET RANDOM HEXA COLOR
+   * GET RANDOM ARRAY
    */
-  const getRandomHexColor = () => {
-    return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
+  const getRandomArrayValue = array => {
+    return array[Math.floor(Math.random() * array.length)];
   };
 
   LcsCnvs = {
@@ -80,10 +80,57 @@ export let LcsCnvs;
     setCanvas: settings => {
       LcsCnvs.settings = settings;
       LcsCnvs.canvas = document.createElement("canvas"); //TODO: check for document
-      LcsCnvs.ctx = LcsCnvs.canvas.getContext("2d");
+
+      //CANVAS SIZE
       LcsCnvs.canvas.width = LcsCnvs.settings.canvas.width;
       LcsCnvs.canvas.height = LcsCnvs.settings.canvas.height;
+
+      //CTX
+      LcsCnvs.ctx = LcsCnvs.canvas.getContext("2d");
+
+      //FILL COLOR
+      LcsCnvs.ctx.fillStyle = LcsCnvs.getColor(LcsCnvs.settings.color.fill, [
+        { x: 0, y: 0 },
+        { x: 0, y: LcsCnvs.canvas.height }
+      ]);
+
+      //STROKE COLOR
+      LcsCnvs.ctx.strokeStyle = LcsCnvs.getColor(
+        LcsCnvs.settings.color.stroke,
+        [
+          { x: 0, y: LcsCnvs.settings.canvas.padding },
+          { x: 0, y: LcsCnvs.canvas.height - LcsCnvs.settings.canvas.padding }
+        ]
+      );
+
+      //LINE STYLE
+      LcsCnvs.ctx.lineWidth = LcsCnvs.settings.line.width;
+      LcsCnvs.ctx.lineCap = LcsCnvs.settings.line.cap;
+      LcsCnvs.ctx.lineJoin = LcsCnvs.settings.line.join;
+
+      //ADD BACKGROUND
+      LcsCnvs.ctx.fillRect(0, 0, LcsCnvs.canvas.width, LcsCnvs.canvas.height);
+
       document.body.append(LcsCnvs.canvas); //TODO: put this at the end of drawing ?
+    },
+
+    getColor: (color, area) => {
+      if (Array.isArray(color)) {
+        return getRandomArrayValue(color);
+      } else if (typeof color === "object") {
+        let linearGradient = LcsCnvs.ctx.createLinearGradient(
+          area[0].x,
+          area[0].y,
+          area[1].x,
+          area[1].y
+        );
+        for (let index in color) {
+          linearGradient.addColorStop(index, color[index]);
+        }
+        return linearGradient;
+      } else {
+        return color;
+      }
     },
 
     /**
@@ -123,9 +170,7 @@ export let LcsCnvs;
           const closestVertices = getClosestVertices([...vertices], vertex, 2);
           LcsCnvs.drawPolygon(
             [vertex].concat(closestVertices),
-            LcsCnvs.settings.vertex.color === "random"
-              ? getRandomHexColor()
-              : LcsCnvs.settings.vertex.color
+            LcsCnvs.settings.vertex.color
           );
         }
         vertices.add(vertex);
@@ -160,9 +205,7 @@ export let LcsCnvs;
         );
         LcsCnvs.drawPolygon(
           [vertex].concat(closestVertices),
-          LcsCnvs.settings.vertex.color === "random"
-            ? getRandomHexColor()
-            : LcsCnvs.settings.vertex.color
+          LcsCnvs.settings.vertex.color
         );
       }
     },
@@ -198,9 +241,7 @@ export let LcsCnvs;
           const closestVertices = getClosestVertices([...vertices], vertex, 2);
           LcsCnvs.drawPolygon(
             [vertex].concat(closestVertices),
-            LcsCnvs.settings.vertex.color === "random"
-              ? getRandomHexColor()
-              : LcsCnvs.settings.vertex.color
+            LcsCnvs.settings.vertex.color
           );
         }
 
@@ -241,9 +282,7 @@ export let LcsCnvs;
             [...vertices][triangles[i + 1]],
             [...vertices][triangles[i + 2]]
           ],
-          LcsCnvs.settings.vertex.color === "random"
-            ? getRandomHexColor()
-            : LcsCnvs.settings.vertex.color
+          LcsCnvs.settings.vertex.color
         );
       }
     }
