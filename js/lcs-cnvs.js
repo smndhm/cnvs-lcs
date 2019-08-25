@@ -17,8 +17,7 @@ export let LcsCnvs;
   const getRandomVertex = area => {
     return {
       x: getRandomNumberBetween(area[0].x, area[1].x),
-      y: getRandomNumberBetween(area[0].y, area[1].y),
-      a: getRandomNumberBetween(0, 359)
+      y: getRandomNumberBetween(area[0].y, area[1].y)
     };
   };
 
@@ -60,10 +59,10 @@ export let LcsCnvs;
   const getVerticesArea = vertices => {
     let area = [{ x: null, y: null }, { x: null, y: null }];
     for (let vertex of vertices) {
-      area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x | vertex.x;
-      area[0].y = vertex.y < area[0].y ? vertex.y : area[0].y | vertex.y;
-      area[1].x = vertex.x > area[1].x ? vertex.x : area[1].x | vertex.x;
-      area[1].y = vertex.y > area[1].y ? vertex.y : area[1].y | vertex.y;
+      area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x || vertex.x;
+      area[0].y = vertex.y < area[0].y ? vertex.y : area[0].y || vertex.y;
+      area[1].x = vertex.x > area[1].x ? vertex.x : area[1].x || vertex.x;
+      area[1].y = vertex.y > area[1].y ? vertex.y : area[1].y || vertex.y;
     }
     return area;
   };
@@ -104,7 +103,9 @@ export let LcsCnvs;
       );
 
       //LINE STYLE
-      LcsCnvs.ctx.lineWidth = LcsCnvs.settings.line.width;
+      if (LcsCnvs.settings.line.width) {
+        LcsCnvs.ctx.lineWidth = LcsCnvs.settings.line.width;
+      }
       LcsCnvs.ctx.lineCap = LcsCnvs.settings.line.cap;
       LcsCnvs.ctx.lineJoin = LcsCnvs.settings.line.join;
 
@@ -146,6 +147,9 @@ export let LcsCnvs;
       if (color) {
         LcsCnvs.ctx.fillStyle = color;
         LcsCnvs.ctx.fill();
+        if (!LcsCnvs.settings.line.width) {
+          LcsCnvs.ctx.strokeStyle = color;
+        }
       }
       LcsCnvs.ctx.stroke();
     },
@@ -170,7 +174,7 @@ export let LcsCnvs;
           const closestVertices = getClosestVertices([...vertices], vertex, 2);
           LcsCnvs.drawPolygon(
             [vertex].concat(closestVertices),
-            LcsCnvs.settings.vertex.color
+            LcsCnvs.getColor(LcsCnvs.settings.vertex.color)
           );
         }
         vertices.add(vertex);
@@ -205,7 +209,7 @@ export let LcsCnvs;
         );
         LcsCnvs.drawPolygon(
           [vertex].concat(closestVertices),
-          LcsCnvs.settings.vertex.color
+          LcsCnvs.getColor(LcsCnvs.settings.vertex.color)
         );
       }
     },
@@ -241,17 +245,17 @@ export let LcsCnvs;
           const closestVertices = getClosestVertices([...vertices], vertex, 2);
           LcsCnvs.drawPolygon(
             [vertex].concat(closestVertices),
-            LcsCnvs.settings.vertex.color
+            LcsCnvs.getColor(LcsCnvs.settings.vertex.color)
           );
         }
 
         vertices.add(vertex);
         verticesArea = getVerticesArea(vertices);
         verticesMaxArea = JSON.parse(JSON.stringify(verticesArea));
-        verticesMaxArea[0].x -= LcsCnvs.settings.vertex.distance.default;
-        verticesMaxArea[0].y -= LcsCnvs.settings.vertex.distance.default;
-        verticesMaxArea[1].x += LcsCnvs.settings.vertex.distance.default;
-        verticesMaxArea[1].y += LcsCnvs.settings.vertex.distance.default;
+        verticesMaxArea[0].x -= LcsCnvs.settings.vertex.distance;
+        verticesMaxArea[0].y -= LcsCnvs.settings.vertex.distance;
+        verticesMaxArea[1].x += LcsCnvs.settings.vertex.distance;
+        verticesMaxArea[1].y += LcsCnvs.settings.vertex.distance;
       }
     },
 
@@ -282,7 +286,7 @@ export let LcsCnvs;
             [...vertices][triangles[i + 1]],
             [...vertices][triangles[i + 2]]
           ],
-          LcsCnvs.settings.vertex.color
+          LcsCnvs.getColor(LcsCnvs.settings.vertex.color)
         );
       }
     }
