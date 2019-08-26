@@ -157,7 +157,8 @@ export let LcsCnvs;
     /**
      * Add vertex and draw triangle with closest vertices
      */
-    drawTriangleAfterNewVertex: () => {
+    drawTriangleAfterNewVertex: settings => {
+      LcsCnvs.setCanvas(settings);
       let vertices = new Set();
       for (let i = 0; i < LcsCnvs.settings.vertex.nb; i++) {
         const vertex = getRandomVertex([
@@ -184,7 +185,8 @@ export let LcsCnvs;
     /**
      * Add every vertices and then foreach draw triangle with closest vertices
      */
-    drawTriangleForEachVertex: () => {
+    drawTriangleForEachVertex: settings => {
+      LcsCnvs.setCanvas(settings);
       let vertices = new Set();
       for (let i = 0; i < LcsCnvs.settings.vertex.nb; i++) {
         const vertex = getRandomVertex([
@@ -217,7 +219,8 @@ export let LcsCnvs;
     /**
      * Add vertex close to vertices zone and draw triangle with closest vertices
      */
-    drawTriangleAround: () => {
+    drawTriangleAround: settings => {
+      LcsCnvs.setCanvas(settings);
       let vertices = new Set();
       let canvasArea = [
         {
@@ -260,7 +263,8 @@ export let LcsCnvs;
     },
 
     // Add all vertices and use Delaunay's triangulation to get triangles
-    drawDelaunay: () => {
+    drawDelaunay: settings => {
+      LcsCnvs.setCanvas(settings);
       let vertices = new Set();
       for (let i = 0; i < LcsCnvs.settings.vertex.nb; i++) {
         const vertex = getRandomVertex([
