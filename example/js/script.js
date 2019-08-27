@@ -1,4 +1,4 @@
-import { LcsCnvs } from "./lcs-cnvs.js";
+import { LcsCnvs } from "../../module/lcs-cnvs.js";
 
 document.addEventListener("DOMContentLoaded", event => {
   LcsCnvs.drawTriangleAfterNewVertex({
