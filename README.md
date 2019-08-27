@@ -10,28 +10,10 @@ I've tried several methods to get there, but as the results where interesting I 
 
 ### #1 Add vertex and draw triangle with closest vertices
 
-![Add vertex and draw triangle with closest vertices](README/method-01.png "Method 01")
+![Add vertex and draw triangle with closest vertices](README/method-01.png "Method 01") ![Add vertex and draw triangle with closest vertices](README/method-01-b.png "Method 01 b")
 
 ```javascript
-LcsCnvs.drawTriangleAfterNewVertex({
-  canvas: {
-    width: 2100,
-    height: 2970,
-    padding: 100
-  },
-  color: {
-    fill: "#ffffff",
-    stroke: "#000000"
-  },
-  line: {
-    width: 10,
-    cap: "square",
-    join: "round"
-  },
-  vertex: {
-    nb: 5000
-  }
-});
+LcsCnvs.drawTriangleAfterNewVertex(settings);
 ```
 
 ### #2 Add all vertices and then for each vertex draw triangle with closest vertices
@@ -39,83 +21,25 @@ LcsCnvs.drawTriangleAfterNewVertex({
 ![Add all vertices and then for each vertex draw triangle with closest vertices](README/method-02.png "Method 02")
 
 ```javascript
-LcsCnvs.drawTriangleForEachVertex({
-  canvas: {
-    width: 2200,
-    height: 2200,
-    padding: 100
-  },
-  color: {
-    fill: "#ffffff",
-    stroke: "#000000"
-  },
-  line: {
-    width: 0,
-    cap: "square",
-    join: "round"
-  },
-  vertex: {
-    nb: 750,
-    color: ["#33A9AC", "#FFA646", "#F86041", "#982062", "#343779"]
-  }
-});
+LcsCnvs.drawTriangleForEachVertex(settings);
 ```
 
 ### #3 Add vertex close to vertices zone and draw triangle with closest vertices
 
-![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03.png "Method 03")
+![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03.png "Method 03") ![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03-b.png "Method 03 b")
 
 ```javascript
-LcsCnvs.drawTriangleAround({
-  canvas: {
-    width: 2200,
-    height: 2200,
-    padding: 0
-  },
-  color: {
-    fill: "#ffffff",
-    stroke: "#000000"
-  },
-  line: {
-    width: 0,
-    cap: "square",
-    join: "round"
-  },
-  vertex: {
-    nb: 1200,
-    distance: 10,
-    color: ["#F23054", "#8C4558", "#025E73", "#037F8C", "#4BB8BE"]
-  }
-});
+LcsCnvs.drawTriangleAround(settings);
 ```
 
 ### Delaunay !
 
 Since I couldn't find a way to get there I did research and find out [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) and then [this script](https://github.com/ironwallaby/delaunay).
 
-![Delaunay](README/method-04.png "Method 04")
+![Delaunay](README/method-04.png "Method 04") ![Delaunay](README/method-04-b.png "Method 04 b")
 
 ```javascript
-LcsCnvs.drawDelaunay({
-  canvas: {
-    width: 2100,
-    height: 2970,
-    padding: 400
-  },
-  color: {
-    fill: "#ffffff",
-    stroke: "#000000"
-  },
-  line: {
-    width: 0,
-    cap: "square",
-    join: "round"
-  },
-  vertex: {
-    nb: 25,
-    color: ["#1F90FF", "#1CE867", "#FBFF2C", "#E8941C", "#FF2B31"]
-  }
-});
+LcsCnvs.drawDelaunay(settings);
 ```
 
 ## Settings
@@ -150,3 +74,9 @@ Here is a basic setting:
 ```
 
 By changing those settings, outputs can be very differents.
+
+## Next
+
+No jealous, I have to take a look at the drawing of the brother...
+
+![Thibaut drawing](README/thbt-drw.png "Thibaut Drawing")
