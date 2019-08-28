@@ -48,14 +48,16 @@ Here is a basic setting:
 
 ```javascript
 {
-  canvas: { //canvas settings
+  canvas: {
+    //canvas settings
     width: 2100,
     height: 2970,
     padding: 100 //padding can be negative
   },
   color: {
     fill: "#ffffff", //background color
-    stroke: { //line color
+    stroke: {
+      //line color
       "0": "#ff0000", //if color is an Object, it will be a gradient
       "0.5": "#00ff00",
       "1": "#0000ff" //from 0 to 1
@@ -68,6 +70,7 @@ Here is a basic setting:
   },
   vertex: {
     nb: 25, //number of vertex
+    distance: 5, //maximum vertex distance from vertice area (only used for the drawTriangleAround method)
     color: ["#1F90FF", "#1CE867", "#FBFF2C", "#E8941C", "#FF2B31"] //if color is an Array, a color will be randomly used
   }
 }

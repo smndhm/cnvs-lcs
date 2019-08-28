@@ -1,46 +1,31 @@
-import { LcsCnvs } from "../../module/lcs-cnvs.js";
-
-const getRandomNumberBetween = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
+import { LcsCnvs } from "../module/lcs-cnvs.js";
 
 document.addEventListener("DOMContentLoaded", event => {
   let settings = {
     canvas: {
-      width: getRandomNumberBetween(1000, 5000),
-      height: getRandomNumberBetween(1000, 5000),
-      padding: getRandomNumberBetween(-100, 250)
+      //canvas settings
+      width: 2100,
+      height: 2970,
+      padding: 100 //padding can be negative
     },
     color: {
-      fill: "#ffffff",
+      fill: "#ffffff", //background color
       stroke: "#000000"
     },
     line: {
-      width: getRandomNumberBetween(0, 10),
+      width: 10, //0 to remove border
       cap: "square",
       join: "round"
     },
     vertex: {
-      nb: getRandomNumberBetween(20, 5000),
-      distance: getRandomNumberBetween(1, 20)
-      // color: ["#8C2786", "#26A6A6", "#F2CE1B", "#F27D16", "#F24F13"]
+      nb: 5000 //number of vertex
     }
   };
 
   console.log(settings);
 
-  switch (getRandomNumberBetween(0, 3)) {
-    case 0:
-      LcsCnvs.drawTriangleAfterNewVertex(settings);
-      break;
-    case 1:
-      LcsCnvs.drawTriangleForEachVertex(settings);
-      break;
-    case 2:
-      LcsCnvs.drawTriangleAround(settings);
-      break;
-    case 3:
-      LcsCnvs.drawDelaunay(settings);
-      break;
-  }
+  LcsCnvs.drawTriangleAfterNewVertex(settings);
+  // LcsCnvs.drawTriangleForEachVertex(settings);
+  // LcsCnvs.drawTriangleAround(settings);
+  // LcsCnvs.drawDelaunay(settings);
 });
