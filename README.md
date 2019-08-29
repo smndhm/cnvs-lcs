@@ -10,7 +10,7 @@ I've tried several methods to get there, but as the results where interesting I 
 
 ### #1 Add vertex and draw triangle with closest vertices
 
-![Add vertex and draw triangle with closest vertices](README/method-01.png "Method 01") ![Add vertex and draw triangle with closest vertices](README/method-01-b.png "Method 01 b")
+> ![Add vertex and draw triangle with closest vertices](README/method-01.png "Method 01") ![Add vertex and draw triangle with closest vertices](README/method-01-b.png "Method 01 b")
 
 ```javascript
 LcsCnvs.drawTriangleAfterNewVertex(settings);
@@ -18,7 +18,7 @@ LcsCnvs.drawTriangleAfterNewVertex(settings);
 
 ### #2 Add all vertices and then for each vertex draw triangle with closest vertices
 
-![Add all vertices and then for each vertex draw triangle with closest vertices](README/method-02.png "Method 02")
+> ![Add all vertices and then for each vertex draw triangle with closest vertices](README/method-02.png "Method 02")
 
 ```javascript
 LcsCnvs.drawTriangleForEachVertex(settings);
@@ -26,7 +26,7 @@ LcsCnvs.drawTriangleForEachVertex(settings);
 
 ### #3 Add vertex close to vertices zone and draw triangle with closest vertices
 
-![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03.png "Method 03") ![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03-b.png "Method 03 b")
+> ![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03.png "Method 03") ![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03-b.png "Method 03 b")
 
 ```javascript
 LcsCnvs.drawTriangleAround(settings);
@@ -36,7 +36,7 @@ LcsCnvs.drawTriangleAround(settings);
 
 Since I couldn't find a way to get there I did research and find out [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) and then [this script](https://github.com/ironwallaby/delaunay).
 
-![Delaunay](README/method-04.png "Method 04") ![Delaunay](README/method-04-b.png "Method 04 b")
+> ![Delaunay](README/method-04.png "Method 04") ![Delaunay](README/method-04-b.png "Method 04 b")
 
 ```javascript
 LcsCnvs.drawDelaunay(settings);
