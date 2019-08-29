@@ -1,4 +1,4 @@
-export var Delaunay;
+var Delaunay;
 
 (function() {
   "use strict";

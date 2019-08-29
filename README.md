@@ -1,85 +1,166 @@
 # cnvs-lcs
 
-Generatives from Lucas drawing
-
 ![Lucas drawing](README/lcs-drw.png "Lucas Drawing")
 
-## Methods
+At first, the idea was to generate something close to Lucas's drawing.  
+I've tried several approaches to get there, but as the results where interesting I kept them.
 
-I've tried several methods to get there, but as the results where interesting I kept them.
+## Approaches
 
 ### #1 Add vertex and draw triangle with closest vertices
 
-![Add vertex and draw triangle with closest vertices](README/method-01.png "Method 01") ![Add vertex and draw triangle with closest vertices](README/method-01-b.png "Method 01 b")
+| 20 vertices                 | 2000 vertices               |
+| --------------------------- | --------------------------- |
+| ![](README/method-01-a.png) | ![](README/method-01-b.png) |
 
-```javascript
-LcsCnvs.drawTriangleAfterNewVertex(settings);
-```
+If we get lucky it can look similar, but I really like the effect when there is a lot of vertices.
 
 ### #2 Add all vertices and then for each vertex draw triangle with closest vertices
 
-![Add all vertices and then for each vertex draw triangle with closest vertices](README/method-02.png "Method 02")
+| 20 vertices                 | 2000 vertices               |
+| --------------------------- | --------------------------- |
+| ![](README/method-02-a.png) | ![](README/method-02-b.png) |
 
-```javascript
-LcsCnvs.drawTriangleForEachVertex(settings);
-```
+Nope.
 
 ### #3 Add vertex close to vertices zone and draw triangle with closest vertices
 
-![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03.png "Method 03") ![Add vertex close to vertices zone and draw triangle with closest vertices](README/method-03-b.png "Method 03 b")
+| 20 vertices                 | 2000 vertices               |
+| --------------------------- | --------------------------- |
+| ![](README/method-03-a.png) | ![](README/method-03-b.png) |
 
-```javascript
-LcsCnvs.drawTriangleAround(settings);
-```
+Same here, if we're lucky we can get something close.
 
-### Delaunay !
+### Delaunay!
+
+| 20 vertices                 | 2000 vertices               |
+| --------------------------- | --------------------------- |
+| ![](README/method-04-a.png) | ![](README/method-04-b.png) |
 
 Since I couldn't find a way to get there I did research and find out [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) and then [this script](https://github.com/ironwallaby/delaunay).
 
-![Delaunay](README/method-04.png "Method 04") ![Delaunay](README/method-04-b.png "Method 04 b")
+Even if Lucas's drawing wasn't only based on triangles, this is really what I tried to get. **And I have its validation ;)**
+
+## API
+
+### Init
+
+First, we need to set a canvas:
+
+#### .setCanvas(settings)
 
 ```javascript
-LcsCnvs.drawDelaunay(settings);
+const canvasSettings = {
+  width: 2100,
+  height: 2970,
+  padding: 100, // padding can be negative
+  fill: "#ffffff" // background color
+};
+
+const mySheet = new LcsCnvs();
+mySheet.setCanvas(canvasSettings);
 ```
 
-## Settings
+### Draw
 
-Here is a basic setting:
+And now we can draw:
+
+#### .drawTriangleAfterNewVertex(settings)
+
+```javascript
+mySheet.drawTriangleAfterNewVertex(polygonSettings);
+```
+
+#### .drawTriangleForEachVertex(settings)
+
+```javascript
+mySheet.drawTriangleForEachVertex(polygonSettings);
+```
+
+#### .drawTriangleAround(settings)
+
+```javascript
+mySheet.drawTriangleAround(polygonSettings);
+```
+
+#### .drawDelaunay(settings)
+
+```javascript
+mySheet.drawDelaunay(polygonSettings);
+```
+
+##### Settings
+
+By changing the polygon settings, outputs can be very differents.
+
+Here is a polygon setting example:
 
 ```javascript
 {
-  canvas: {
-    //canvas settings
-    width: 2100,
-    height: 2970,
-    padding: 100 //padding can be negative
-  },
-  color: {
-    fill: "#ffffff", //background color
-    stroke: {
-      //line color
-      "0": "#ff0000", //if color is an Object, it will be a gradient
-      "0.5": "#00ff00",
-      "1": "#0000ff" //from 0 to 1
-    }
-  },
+  color: ["#1F90FF", "#1CE867", "#FBFF2C", "#E8941C", "#FF2B31"] // if color is an Array, a color will be randomly used
+  blendingMode: "multiply",
   line: {
-    width: 10, //0 to remove border
+    color: {
+      // line color
+      "0": "#ff0000", // if color is an Object, it will be a gradient
+      "0.5": "#00ff00",
+      "1": "#0000ff" // from 0 to 1
+    },
+    width: 5, // 0 to remove border
     cap: "square",
     join: "round"
   },
   vertex: {
-    nb: 25, //number of vertex
-    distance: 5, //maximum vertex distance from vertice area (only used for the drawTriangleAround method)
-    color: ["#1F90FF", "#1CE867", "#FBFF2C", "#E8941C", "#FF2B31"] //if color is an Array, a color will be randomly used
+    nb: 12000, // number of vertex
+    distance: 5, // maximum vertex distance from vertice area (only used for the drawTriangleAround method)
+    onPixel: true // used if you don't wan't vertex on loaded image, need a transparent background
   }
 }
 ```
 
-By changing those settings, outputs can be very differents.
+### Display
 
-## Next
+And then, display result:
+
+#### .append(querySelector)
+
+```javascript
+mySheet.append("body");
+```
+
+| #1                          | #2                          | #3                          | #4                          |
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- |
+| ![](README/method-01-c.png) | ![](README/method-02-c.png) | ![](README/method-03-c.png) | ![](README/method-04-c.png) |
+
+### Extra
+
+Because _I had to_ use those generative for [Daron Crew](https://www.instagram.com/daroncrew) artworks, I added this extra method:
+
+#### .addImage(settings)
+
+```javascript
+const imageSettings = {
+  src: "./img/daron-crew.svg", // path to image
+  width: 1520 // desired width (height is calculated)
+};
+
+mySheet.addImage(imageSettings).then(sheet => {
+  sheet.append("body");
+});
+```
+
+**The image will be vertically and horizontally centered.**
+
+There is also a dedicated polygon parameter: `onPixel`.
+If defined, it will condition if vertex must be positionned on used pixel (`true`) or not (`false`).
+**Must be used on a canvas without background.**
+
+## Example
+
+[Here some code examples](docs/js) and [here a demo](https://smndhm.github.io/lcs-cnvs/).
+
+## next
 
 No jealous, I have to take a look at the drawing of the brother...
 
-![Thibaut drawing](README/thbt-drw.png "Thibaut Drawing")
+![](README/thbt-drw.png)
