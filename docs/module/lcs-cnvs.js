@@ -88,10 +88,14 @@ export let LcsCnvs;
       LcsCnvs.ctx = LcsCnvs.canvas.getContext("2d");
 
       //FILL COLOR
-      LcsCnvs.ctx.fillStyle = LcsCnvs.getColor(LcsCnvs.settings.color.fill, [
-        { x: 0, y: 0 },
-        { x: 0, y: LcsCnvs.canvas.height }
-      ]);
+      if (LcsCnvs.settings.color.fill) {
+        LcsCnvs.ctx.fillStyle = LcsCnvs.getColor(LcsCnvs.settings.color.fill, [
+          { x: 0, y: 0 },
+          { x: 0, y: LcsCnvs.canvas.height }
+        ]);
+        //ADD BACKGROUND
+        LcsCnvs.ctx.fillRect(0, 0, LcsCnvs.canvas.width, LcsCnvs.canvas.height);
+      }
 
       //STROKE COLOR
       LcsCnvs.ctx.strokeStyle = LcsCnvs.getColor(
@@ -108,9 +112,6 @@ export let LcsCnvs;
       }
       LcsCnvs.ctx.lineCap = LcsCnvs.settings.line.cap;
       LcsCnvs.ctx.lineJoin = LcsCnvs.settings.line.join;
-
-      //ADD BACKGROUND
-      LcsCnvs.ctx.fillRect(0, 0, LcsCnvs.canvas.width, LcsCnvs.canvas.height);
 
       document.body.append(LcsCnvs.canvas); //TODO: put this at the end of drawing ?
     },

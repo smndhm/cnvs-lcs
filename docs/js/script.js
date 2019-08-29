@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", event => {
       padding: 100 //padding can be negative
     },
     color: {
-      fill: "#ffffff", //background color
+      // fill: "#ffffff", //background color
       stroke: "#000000"
     },
     line: {
