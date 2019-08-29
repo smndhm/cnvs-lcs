@@ -151,6 +151,10 @@ export let LcsCnvs;
           LcsCnvs.ctx.strokeStyle = color;
         }
       }
+      if (LcsCnvs.settings.vertex.blendingMode) {
+        LcsCnvs.ctx.globalCompositeOperation =
+          LcsCnvs.settings.vertex.blendingMode;
+      }
       LcsCnvs.ctx.stroke();
     },
 
