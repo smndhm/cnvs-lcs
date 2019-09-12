@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", event => {
       padding: 100 //padding can be negative
     },
     color: {
-      // fill: "#ffffff", //background color
+      // fill: "#000000", //background color
       stroke: "#000000"
     },
     line: {
@@ -34,13 +34,15 @@ document.addEventListener("DOMContentLoaded", event => {
       nb: 5000, //number of vertex
       color: getRandomArrayValue(colors),
       blendingMode: "multiply"
+    },
+    image: {
+      src: "img/daron-crew.svg",
+      width: 1000,
+      drawOn: true
     }
   };
 
   console.log(settings);
 
-  LcsCnvs.drawTriangleAfterNewVertex(settings);
-  // LcsCnvs.drawTriangleForEachVertex(settings);
-  // LcsCnvs.drawTriangleAround(settings);
-  // LcsCnvs.drawDelaunay(settings);
+  LcsCnvs.setCanvas(settings).drawTriangleAfterNewVertex();
 });
