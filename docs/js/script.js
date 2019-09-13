@@ -1,5 +1,3 @@
-import { LcsCnvs } from "../module/lcs-cnvs.js";
-
 const colors = [
   // ["#F40080", "#D9048E", "#A6038B", "#7C038C", "#570080"],
   // ["#FF1E42", "#CCD1D1", "#003943", "#00AC8B", "#F1B321"],
@@ -19,30 +17,33 @@ document.addEventListener("DOMContentLoaded", event => {
       //canvas settings
       width: 2100,
       height: 2970,
-      padding: 100 //padding can be negative
-    },
-    color: {
-      // fill: "#000000", //background color
-      stroke: "#000000"
-    },
-    line: {
-      width: 0, //0 to remove border
-      cap: "square",
-      join: "round"
-    },
-    vertex: {
-      nb: 5000, //number of vertex
-      color: getRandomArrayValue(colors),
-      blendingMode: "multiply"
-    },
-    image: {
-      src: "img/daron-crew.svg",
-      width: 1000,
-      drawOn: true
+      padding: 100, //padding can be negative
+      fill: "#000000" //background color
     }
   };
 
+  // ,
+  //   color: {
+  //     stroke: "#000000"
+  //   },
+  //   line: {
+  //     width: 0, //0 to remove border
+  //     cap: "square",
+  //     join: "round"
+  //   },
+  //   vertex: {
+  //     nb: 5000, //number of vertex
+  //     color: getRandomArrayValue(colors),
+  //     blendingMode: "multiply"
+  //   },
+  //   image: {
+  //     src: "img/daron-crew.svg",
+  //     width: 1000,
+  //     drawOn: true
+  //   }
+
   console.log(settings);
 
-  LcsCnvs.setCanvas(settings).drawTriangleAfterNewVertex();
+  const monDessin = new LcsCnvs();
+  monDessin.setCanvas(settings.canvas).append("body");
 });
