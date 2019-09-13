@@ -18,19 +18,29 @@ document.addEventListener("DOMContentLoaded", event => {
       width: 2100,
       height: 2970,
       padding: 100, //padding can be negative
-      fill: "#000000" //background color
+      fill: "#ffffff" //background color
+    },
+    polygon: {
+      color: getRandomArrayValue(colors),
+      blendingMode: "multiply",
+      line: {
+        width: 1, //0 to remove border
+        color: getRandomArrayValue(colors),
+        cap: "square",
+        join: "round"
+      },
+      vertex: {
+        nb: 5000 //number of vertex
+      }
+    },
+    image: {
+      src: "img/daron-crew.svg",
+      width: 1000
     }
   };
 
   // ,
-  //   color: {
-  //     stroke: "#000000"
-  //   },
-  //   line: {
-  //     width: 0, //0 to remove border
-  //     cap: "square",
-  //     join: "round"
-  //   },
+  //
   //   vertex: {
   //     nb: 5000, //number of vertex
   //     color: getRandomArrayValue(colors),
@@ -45,5 +55,9 @@ document.addEventListener("DOMContentLoaded", event => {
   console.log(settings);
 
   const monDessin = new LcsCnvs();
-  monDessin.setCanvas(settings.canvas).append("body");
+  monDessin
+    .setCanvas(settings.canvas)
+    .addImage(settings.image)
+    .drawTriangleAfterNewVertex(settings.polygon)
+    .append("body");
 });
