@@ -17,40 +17,27 @@ document.addEventListener("DOMContentLoaded", event => {
       //canvas settings
       width: 2100,
       height: 2970,
-      padding: 100, //padding can be negative
-      fill: "#ffffff" //background color
+      padding: 250 //padding can be negative
+      // fill: "#ffffff" //background color
     },
     polygon: {
       color: getRandomArrayValue(colors),
       blendingMode: "multiply",
       line: {
-        width: 1, //0 to remove border
-        color: getRandomArrayValue(colors),
+        // width: 5, //0 to remove border
         cap: "square",
         join: "round"
       },
       vertex: {
-        nb: 5000 //number of vertex
+        nb: 5000, //number of vertex
+        onlyOnPixel: true
       }
     },
     image: {
-      src: "img/daron-crew.svg",
-      width: 1000
+      src: "./img/daron-crew.svg",
+      width: 1520
     }
   };
-
-  // ,
-  //
-  //   vertex: {
-  //     nb: 5000, //number of vertex
-  //     color: getRandomArrayValue(colors),
-  //     blendingMode: "multiply"
-  //   },
-  //   image: {
-  //     src: "img/daron-crew.svg",
-  //     width: 1000,
-  //     drawOn: true
-  //   }
 
   console.log(settings);
 
@@ -58,6 +45,13 @@ document.addEventListener("DOMContentLoaded", event => {
   monDessin
     .setCanvas(settings.canvas)
     .addImage(settings.image)
-    .drawTriangleAfterNewVertex(settings.polygon)
-    .append("body");
+    .then(canvas => {
+      settings.image.width = 1360;
+      canvas
+        .drawTriangleAfterNewVertex(settings.polygon)
+        .addImage(settings.image)
+        .then(canvas => {
+          canvas.append("body");
+        });
+    });
 });

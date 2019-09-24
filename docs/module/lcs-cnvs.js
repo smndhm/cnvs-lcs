@@ -36,36 +36,78 @@ class LcsCnvs {
     //SETTINGS
     this.settings.polygon = settingPolygon;
     let vertices = new Set();
+    let polygons = new Set();
     for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
-      const vertex = this.getRandomVertex([
-        {
-          x: this.settings.canvas.padding,
-          y: this.settings.canvas.padding
-        },
-        {
-          x: this.settings.canvas.width - this.settings.canvas.padding,
-          y: this.settings.canvas.height - this.settings.canvas.padding
-        }
-      ]);
+      let vertex;
+      do {
+        vertex = this.getRandomVertex([
+          {
+            x: this.settings.canvas.padding,
+            y: this.settings.canvas.padding
+          },
+          {
+            x: this.settings.canvas.width - this.settings.canvas.padding,
+            y: this.settings.canvas.height - this.settings.canvas.padding
+          }
+        ]);
+      } while (
+        !this.settings.polygon.vertex.onlyOnPixel ||
+        !this.isVertexOnPixel(vertex)
+      );
+
       if (vertices.size >= 2) {
         const closestVertices = this.getClosestVertices(
           [...vertices],
           vertex,
           2
         );
-        this.drawPolygon(
-          [vertex].concat(closestVertices),
-          this.getColor(this.settings.polygon.color)
-        );
+        polygons.add([vertex].concat(closestVertices));
       }
       vertices.add(vertex);
     }
+    for (const polygon of polygons) {
+      this.drawPolygon(polygon, this.getColor(this.settings.polygon.color));
+    }
     return this;
+  }
+
+  addImage(settingImage) {
+    this.settings.image = settingImage;
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.onload = () => {
+        if (this.settings.image.width) {
+          img.height = (img.height * this.settings.image.width) / img.width;
+          img.width = this.settings.image.width;
+        }
+        //draw centered image
+        this.ctx.drawImage(
+          img,
+          (this.canvas.width - img.width) / 2,
+          (this.canvas.height - img.height) / 2,
+          img.width,
+          img.height
+        );
+        resolve(this);
+      };
+      img.onerror = error => {
+        reject(error);
+      };
+      img.src = this.settings.image.src;
+    });
   }
 
   append(querySelector) {
     const element = document.querySelector(querySelector);
     element.append(this.canvas);
+  }
+
+  isVertexOnPixel(vertex) {
+    return (
+      JSON.stringify(
+        Array.from(this.ctx.getImageData(vertex.x, vertex.y, 1, 1).data)
+      ) !== JSON.stringify(Array.from([0, 0, 0, 0]))
+    );
   }
 
   /**
@@ -125,34 +167,6 @@ class LcsCnvs {
       }
     }
     this.ctx.stroke();
-  }
-
-  async addImage(settingImage) {
-    this.settings.image = settingImage;
-    //IMAGE
-    const imgLoad = () => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          if (this.settings.image.width) {
-            img.height = (img.height * this.settings.image.width) / img.width;
-            img.width = this.settings.image.width;
-          }
-          //draw centered image
-          this.ctx.drawImage(
-            img,
-            (this.canvas.width - img.width) / 2,
-            (this.canvas.height - img.height) / 2,
-            img.width,
-            img.height
-          );
-          resolve(this);
-        };
-        img.onerror = reject;
-        img.src = this.settings.image.src;
-      });
-    };
-    return await imgLoad();
   }
 
   /**
