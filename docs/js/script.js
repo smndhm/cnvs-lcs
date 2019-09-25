@@ -17,20 +17,20 @@ document.addEventListener("DOMContentLoaded", event => {
       //canvas settings
       width: 2100,
       height: 2970,
-      padding: 250 //padding can be negative
+      padding: 100 //padding can be negative
       // fill: "#ffffff" //background color
     },
     polygon: {
-      color: getRandomArrayValue(colors),
+      // color: getRandomArrayValue(colors),
       blendingMode: "multiply",
       line: {
-        // width: 5, //0 to remove border
+        width: 5, //0 to remove border
         cap: "square",
         join: "round"
       },
       vertex: {
-        nb: 5000, //number of vertex
-        onlyOnPixel: true
+        nb: 10000, //number of vertex
+        onPixel: false
       }
     },
     image: {
@@ -46,12 +46,6 @@ document.addEventListener("DOMContentLoaded", event => {
     .setCanvas(settings.canvas)
     .addImage(settings.image)
     .then(canvas => {
-      settings.image.width = 1360;
-      canvas
-        .drawTriangleAfterNewVertex(settings.polygon)
-        .addImage(settings.image)
-        .then(canvas => {
-          canvas.append("body");
-        });
+      canvas.drawTriangleAfterNewVertex(settings.polygon).append("body");
     });
 });

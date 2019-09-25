@@ -51,8 +51,11 @@ class LcsCnvs {
           }
         ]);
       } while (
-        !this.settings.polygon.vertex.onlyOnPixel ||
-        !this.isVertexOnPixel(vertex)
+        typeof this.settings.polygon.vertex.onPixel !== "undefined" &&
+        ((this.settings.polygon.vertex.onPixel === false &&
+          this.isVertexOnPixel(vertex)) ||
+          (this.settings.polygon.vertex.onPixel === true &&
+            !this.isVertexOnPixel(vertex)))
       );
 
       if (vertices.size >= 2) {
