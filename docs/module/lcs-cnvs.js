@@ -35,8 +35,10 @@ class LcsCnvs {
   drawTriangleAfterNewVertex(settingPolygon) {
     //SETTINGS
     this.settings.polygon = settingPolygon;
+
     let vertices = new Set();
     let polygons = new Set();
+
     for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
       let vertex;
       do {
@@ -50,13 +52,7 @@ class LcsCnvs {
             y: this.settings.canvas.height - this.settings.canvas.padding
           }
         ]);
-      } while (
-        typeof this.settings.polygon.vertex.onPixel !== "undefined" &&
-        ((this.settings.polygon.vertex.onPixel === false &&
-          this.isVertexOnPixel(vertex)) ||
-          (this.settings.polygon.vertex.onPixel === true &&
-            !this.isVertexOnPixel(vertex)))
-      );
+      } while (this.isVertexOnPosition(vertex));
 
       if (vertices.size >= 2) {
         const closestVertices = this.getClosestVertices(
@@ -70,6 +66,153 @@ class LcsCnvs {
     }
     for (const polygon of polygons) {
       this.drawPolygon(polygon, this.getColor(this.settings.polygon.color));
+    }
+    return this;
+  }
+
+  drawTriangleForEachVertex(settingPolygon) {
+    //SETTINGS
+    this.settings.polygon = settingPolygon;
+
+    let vertices = new Set();
+
+    for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
+      let vertex;
+      do {
+        vertex = this.getRandomVertex([
+          {
+            x: this.settings.canvas.padding,
+            y: this.settings.canvas.padding
+          },
+          {
+            x: this.settings.canvas.width - this.settings.canvas.padding,
+            y: this.settings.canvas.height - this.settings.canvas.padding
+          }
+        ]);
+      } while (this.isVertexOnPosition(vertex));
+
+      vertices.add(vertex);
+    }
+    for (let vertex of vertices) {
+      const copyVertices = new Set(vertices);
+      copyVertices.delete(vertex);
+      const closestVertices = this.getClosestVertices(
+        [...copyVertices],
+        vertex,
+        2
+      );
+      this.drawPolygon(
+        [vertex].concat(closestVertices),
+        this.getColor(this.settings.polygon.vertex.color)
+      );
+    }
+    return this;
+  }
+
+  /**
+   * Add vertex close to vertices zone and draw triangle with closest vertices
+   */
+  drawTriangleAround(settingPolygon) {
+    //SETTINGS
+    this.settings.polygon = settingPolygon;
+    if (!this.settings.polygon.vertex.distance) {
+      console.warn(
+        "this.settings.polygon.vertex.distance not set, auto set at 10"
+      );
+      this.settings.polygon.vertex.distance = 10;
+    }
+
+    let vertices = new Set();
+
+    let canvasArea = [
+      {
+        x: this.settings.canvas.padding,
+        y: this.settings.canvas.padding
+      },
+      {
+        x: this.settings.canvas.width - this.settings.canvas.padding,
+        y: this.settings.canvas.height - this.settings.canvas.padding
+      }
+    ];
+    let verticesArea = JSON.parse(JSON.stringify(canvasArea));
+    let verticesMaxArea = JSON.parse(JSON.stringify(canvasArea));
+    for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
+      let vertex;
+      do {
+        vertex = this.getRandomVertex(verticesMaxArea);
+      } while (
+        (vertices.size && this.isVertexInArea(vertex, verticesArea)) ||
+        !this.isVertexInArea(vertex, verticesMaxArea) ||
+        !this.isVertexInArea(vertex, canvasArea) ||
+        this.isVertexOnPosition(vertex)
+      );
+
+      if (vertices.size >= 2) {
+        const closestVertices = this.getClosestVertices(
+          [...vertices],
+          vertex,
+          2
+        );
+        this.drawPolygon(
+          [vertex].concat(closestVertices),
+          this.getColor(this.settings.polygon.vertex.color)
+        );
+      }
+
+      vertices.add(vertex);
+      verticesArea = this.getVerticesArea(vertices);
+      verticesMaxArea = JSON.parse(JSON.stringify(verticesArea));
+      verticesMaxArea[0].x -= this.settings.polygon.vertex.distance;
+      verticesMaxArea[0].y -= this.settings.polygon.vertex.distance;
+      verticesMaxArea[1].x += this.settings.polygon.vertex.distance;
+      verticesMaxArea[1].y += this.settings.polygon.vertex.distance;
+    }
+    return this;
+  }
+
+  // Add all vertices and use Delaunay's triangulation to get triangles
+  drawDelaunay(settingPolygon) {
+    if (typeof Delaunay === "undefined") {
+      console.error(
+        "You must load Delaunay's script: https://github.com/ironwallaby/delaunay"
+      );
+      return this;
+    }
+    //SETTINGS
+    this.settings.polygon = settingPolygon;
+
+    let vertices = new Set();
+
+    for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
+      let vertex;
+      do {
+        vertex = this.getRandomVertex([
+          {
+            x: this.settings.canvas.padding,
+            y: this.settings.canvas.padding
+          },
+          {
+            x: this.settings.canvas.width - this.settings.canvas.padding,
+            y: this.settings.canvas.height - this.settings.canvas.padding
+          }
+        ]);
+      } while (this.isVertexOnPosition(vertex));
+
+      vertices.add(vertex);
+    }
+    const verticesArray = [...vertices].map(vertex => {
+      return [vertex.x, vertex.y];
+    });
+    var triangles = Delaunay.triangulate(verticesArray);
+    for (var i = 0; i < triangles.length; i += 3) {
+      this.drawPolygon(
+        [
+          [...vertices][triangles[i]],
+          [...vertices][triangles[i + 1]],
+          [...vertices][triangles[i + 2]]
+        ],
+        this.getColor(this.settings.polygon.vertex.color)
+      );
     }
     return this;
   }
@@ -110,6 +253,16 @@ class LcsCnvs {
       JSON.stringify(
         Array.from(this.ctx.getImageData(vertex.x, vertex.y, 1, 1).data)
       ) !== JSON.stringify(Array.from([0, 0, 0, 0]))
+    );
+  }
+
+  isVertexOnPosition(vertex) {
+    return (
+      typeof this.settings.polygon.vertex.onPixel !== "undefined" &&
+      ((this.settings.polygon.vertex.onPixel === false &&
+        this.isVertexOnPixel(vertex)) ||
+        (this.settings.polygon.vertex.onPixel === true &&
+          !this.isVertexOnPixel(vertex)))
     );
   }
 
@@ -210,5 +363,31 @@ class LcsCnvs {
       x: this.getRandomNumberBetween(area[0].x, area[1].x),
       y: this.getRandomNumberBetween(area[0].y, area[1].y)
     };
+  }
+
+  /**
+   * IS VERTEX IN CANVAS
+   */
+  isVertexInArea(vertex, area) {
+    return (
+      vertex.x > area[0].x &&
+      vertex.x < area[1].x &&
+      vertex.y > area[0].y &&
+      vertex.y < area[1].y
+    );
+  }
+
+  /**
+   * GET VERTICES AREA
+   */
+  getVerticesArea(vertices) {
+    let area = [{ x: null, y: null }, { x: null, y: null }];
+    for (let vertex of vertices) {
+      area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x || vertex.x;
+      area[0].y = vertex.y < area[0].y ? vertex.y : area[0].y || vertex.y;
+      area[1].x = vertex.x > area[1].x ? vertex.x : area[1].x || vertex.x;
+      area[1].y = vertex.y > area[1].y ? vertex.y : area[1].y || vertex.y;
+    }
+    return area;
   }
 }
