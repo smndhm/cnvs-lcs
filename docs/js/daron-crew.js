@@ -29,13 +29,13 @@ document.addEventListener("DOMContentLoaded", event => {
         join: "round"
       },
       vertex: {
-        nb: 5000, //number of vertex
-        onPixel: true
+        nb: 12000, //number of vertex
+        onPixel: false
       }
     },
     image: {
-      src: "./img/circle.svg",
-      width: 1700
+      src: "./img/daron-crew.svg",
+      width: 1520
     }
   };
 
@@ -47,6 +47,21 @@ document.addEventListener("DOMContentLoaded", event => {
     .setCanvas(settings.canvas)
     .addImage(settings.image)
     .then(canvas => {
-      canvas.drawTriangleAfterNewVertex(settings.polygon).append("body");
+      const monImg = canvas
+        .drawTriangleAfterNewVertex(settings.polygon)
+        .canvas.toDataURL();
+
+      const maFeuilleBlanche = new LcsCnvs();
+
+      maFeuilleBlanche
+        .setCanvas({
+          width: 2100,
+          height: 2970,
+          fill: "#ffffff"
+        })
+        .addImage({ src: monImg })
+        .then(canvas => {
+          canvas.append("body");
+        });
     });
 });
