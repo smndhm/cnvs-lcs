@@ -103,7 +103,7 @@ class LcsCnvs {
       );
       this.drawPolygon(
         [vertex].concat(closestVertices),
-        this.getColor(this.settings.polygon.vertex.color)
+        this.getColor(this.settings.polygon.color)
       );
     }
     return this;
@@ -155,7 +155,7 @@ class LcsCnvs {
         );
         this.drawPolygon(
           [vertex].concat(closestVertices),
-          this.getColor(this.settings.polygon.vertex.color)
+          this.getColor(this.settings.polygon.color)
         );
       }
 
@@ -211,7 +211,7 @@ class LcsCnvs {
           [...vertices][triangles[i + 1]],
           [...vertices][triangles[i + 2]]
         ],
-        this.getColor(this.settings.polygon.vertex.color)
+        this.getColor(this.settings.polygon.color)
       );
     }
     return this;

@@ -7,21 +7,21 @@ document.addEventListener("DOMContentLoaded", event => {
   let settings = {
     canvas: {
       //canvas settings
-      width: 300,
-      height: 300,
-      padding: -15, //padding can be negative
+      width: 2100,
+      height: 2970,
+      padding: 100, //padding can be negative
       fill: "#ffffff" //background color
     },
     polygon: {
-      color: ["#F40080", "#D9048E", "#A6038B", "#7C038C", "#570080"],
+      color: ["#FDC741", "#01B3E3", "#DA38B5", "#FF6B01", "#25CE7B"], //if color is an Array, a color will be randomly used
+      blendingMode: "multiply",
       line: {
         width: 0, //0 to remove border
         cap: "square",
         join: "round"
       },
       vertex: {
-        nb: 300, //number of vertex
-        distance: 3
+        nb: 500 //number of vertex
       }
     }
   };
@@ -31,6 +31,6 @@ document.addEventListener("DOMContentLoaded", event => {
   const monDessin = new LcsCnvs();
   monDessin
     .setCanvas(settings.canvas)
-    .drawDelaunay(settings.polygon)
+    .drawTriangleAfterNewVertex(settings.polygon)
     .append("body");
 });
