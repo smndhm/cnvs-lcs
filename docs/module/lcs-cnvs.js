@@ -273,7 +273,7 @@ class LcsCnvs {
    */
   getColor(color, area) {
     if (Array.isArray(color)) {
-      return getRandomArrayValue(color);
+      return this.getRandomArrayValue(color);
     } else if (typeof color === "object") {
       let linearGradient = this.ctx.createLinearGradient(
         area[0].x,
@@ -390,4 +390,8 @@ class LcsCnvs {
     }
     return area;
   }
+
+  getRandomArrayValue = array => {
+    return array[Math.floor(Math.random() * array.length)];
+  };
 }
