@@ -124,9 +124,9 @@ And then, display result:
 mySheet.append("body");
 ```
 
-| .drawTriangleAfterNewVertex() | .drawTriangleForEachVertex() | .drawTriangleAround()       | .drawDelaunay()             |
-| ----------------------------- | ---------------------------- | --------------------------- | --------------------------- |
-| ![](README/method-01-c.png)   | ![](README/method-02-c.png)  | ![](README/method-03-c.png) | ![](README/method-04-c.png) |
+| #1                          | #2                          | #3                          | #4                          |
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- |
+| ![](README/method-01-c.png) | ![](README/method-02-c.png) | ![](README/method-03-c.png) | ![](README/method-04-c.png) |
 
 Because _I had to_ use those generative for [Daron Crew](https://www.instagram.com/daroncrew) artworks, I added this extra method:
 
