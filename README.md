@@ -116,8 +116,6 @@ Here is a polygon setting example:
 
 By changing those settings, outputs can be very differents.
 
-![](README/method-01-c.png)![](README/method-02-c.png)![](README/method-03-c.png)![](README/method-04-c.png)
-
 And then, display result:
 
 ### .append(querySelector)
@@ -125,6 +123,10 @@ And then, display result:
 ```javascript
 mySheet.append("body");
 ```
+
+| .drawTriangleAfterNewVertex() | .drawTriangleForEachVertex() | .drawTriangleAround()       | .drawDelaunay()             |
+| ----------------------------- | ---------------------------- | --------------------------- | --------------------------- |
+| ![](README/method-01-c.png)   | ![](README/method-02-c.png)  | ![](README/method-03-c.png) | ![](README/method-04-c.png) |
 
 Because _I had to_ use those generative for [Daron Crew](https://www.instagram.com/daroncrew) artworks, I added this extra method:
 
@@ -147,4 +149,4 @@ mySheet.addImage(imageSettings).then(sheet => {
 
 ## Example
 
-[Here some code examples](cnvs-lcs/docs/js) and [here a demo](https://smndhm.github.io/lcs-cnvs/).
+[Here some code examples](docs/js) and [here a demo](https://smndhm.github.io/lcs-cnvs/).
