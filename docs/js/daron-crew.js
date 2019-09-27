@@ -16,21 +16,22 @@ document.addEventListener("DOMContentLoaded", event => {
     canvas: {
       //canvas settings
       width: 2100,
-      height: 2970,
-      padding: 100 //padding can be negative
-      // fill: "#ffffff" //background color
+      height: 2100,
+      padding: 100, //padding can be negative
+      fill: "#ffffff" //background color
     },
     polygon: {
       // color: getRandomArrayValue(colors),
-      blendingMode: "multiply",
+      // blendingMode: "multiply",
       line: {
+        color: "#eeeeee",
         width: 5, //0 to remove border
         cap: "square",
         join: "round"
       },
       vertex: {
-        nb: 12000, //number of vertex
-        onPixel: false
+        nb: 5000 //number of vertex
+        // onPixel: true
       }
     },
     image: {
@@ -55,11 +56,11 @@ document.addEventListener("DOMContentLoaded", event => {
 
       maFeuilleBlanche
         .setCanvas({
-          width: 2100,
-          height: 2970,
+          width: 300,
+          height: 300,
           fill: "#ffffff"
         })
-        .addImage({ src: monImg })
+        .addImage({ src: monImg, width: 300 })
         .then(canvas => {
           canvas.append("body");
         });
