@@ -7,7 +7,7 @@ class LcsCnvs {
    *
    * @param {*} settingsCanvas
    */
-  setCanvas(settingsCanvas) {
+  setCanvas = settingsCanvas => {
     //SETTINGS
     this.settings.canvas = settingsCanvas;
     //CANVAS
@@ -27,12 +27,13 @@ class LcsCnvs {
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
     return this;
-  }
+  };
 
   /**
-   * Add vertex and draw triangle with closest vertices
+   *
+   * @param {*} settingPolygon
    */
-  drawTriangleAfterNewVertex(settingPolygon) {
+  drawTriangleAfterNewVertex = settingPolygon => {
     //SETTINGS
     this.settings.polygon = settingPolygon;
 
@@ -68,9 +69,13 @@ class LcsCnvs {
       this.drawPolygon(polygon, this.getColor(this.settings.polygon.color));
     }
     return this;
-  }
+  };
 
-  drawTriangleForEachVertex(settingPolygon) {
+  /**
+   *
+   * @param {*} settingPolygon
+   */
+  drawTriangleForEachVertex = settingPolygon => {
     //SETTINGS
     this.settings.polygon = settingPolygon;
 
@@ -107,12 +112,13 @@ class LcsCnvs {
       );
     }
     return this;
-  }
+  };
 
   /**
-   * Add vertex close to vertices zone and draw triangle with closest vertices
+   *
+   * @param {*} settingPolygon
    */
-  drawTriangleAround(settingPolygon) {
+  drawTriangleAround = settingPolygon => {
     //SETTINGS
     this.settings.polygon = settingPolygon;
     if (!this.settings.polygon.vertex.distance) {
@@ -168,10 +174,13 @@ class LcsCnvs {
       verticesMaxArea[1].y += this.settings.polygon.vertex.distance;
     }
     return this;
-  }
+  };
 
-  // Add all vertices and use Delaunay's triangulation to get triangles
-  drawDelaunay(settingPolygon) {
+  /**
+   *
+   * @param {*} settingPolygon
+   */
+  drawDelaunay = settingPolygon => {
     if (typeof Delaunay === "undefined") {
       console.error(
         "You must load Delaunay's script: https://github.com/ironwallaby/delaunay"
@@ -215,9 +224,13 @@ class LcsCnvs {
       );
     }
     return this;
-  }
+  };
 
-  addImage(settingImage) {
+  /**
+   *
+   * @param {*} settingImage
+   */
+  addImage = settingImage => {
     this.settings.image = settingImage;
     return new Promise((resolve, reject) => {
       let img = new Image();
@@ -241,22 +254,34 @@ class LcsCnvs {
       };
       img.src = this.settings.image.src;
     });
-  }
+  };
 
-  append(querySelector) {
+  /**
+   *
+   * @param {*} querySelector
+   */
+  append = querySelector => {
     const element = document.querySelector(querySelector);
     element.append(this.canvas);
-  }
+  };
 
-  isVertexOnPixel(vertex) {
+  /**
+   *
+   * @param {*} vertex
+   */
+  isVertexOnPixel = vertex => {
     return (
       JSON.stringify(
         Array.from(this.ctx.getImageData(vertex.x, vertex.y, 1, 1).data)
       ) !== JSON.stringify(Array.from([0, 0, 0, 0]))
     );
-  }
+  };
 
-  isVertexOnPosition(vertex) {
+  /**
+   *
+   * @param {*} vertex
+   */
+  isVertexOnPosition = vertex => {
     return (
       typeof this.settings.polygon.vertex.onPixel !== "undefined" &&
       ((this.settings.polygon.vertex.onPixel === false &&
@@ -264,14 +289,14 @@ class LcsCnvs {
         (this.settings.polygon.vertex.onPixel === true &&
           !this.isVertexOnPixel(vertex)))
     );
-  }
+  };
 
   /**
    *
    * @param {*} color
    * @param {*} area
    */
-  getColor(color, area) {
+  getColor = (color, area) => {
     if (Array.isArray(color)) {
       return this.getRandomArrayValue(color);
     } else if (typeof color === "object") {
@@ -288,12 +313,14 @@ class LcsCnvs {
     } else {
       return color;
     }
-  }
+  };
 
   /**
-   * DRAW POLYGON
+   *
+   * @param {*} vertices
+   * @param {*} color
    */
-  drawPolygon(vertices, color) {
+  drawPolygon = (vertices, color) => {
     //STROKE COLOR
     this.ctx.strokeStyle = this.getColor(this.settings.polygon.line.color, [
       { x: 0, y: this.settings.canvas.padding },
@@ -323,21 +350,26 @@ class LcsCnvs {
       }
     }
     this.ctx.stroke();
-  }
+  };
 
   /**
-   * GET VERTICES DISTANCE
+   *
+   * @param {*} vertexA
+   * @param {*} vertexB
    */
-  getVerticesDistance(vertexA, vertexB) {
+  getVerticesDistance = (vertexA, vertexB) => {
     return (
       Math.pow(vertexA.x - vertexB.x, 2) + Math.pow(vertexA.y - vertexB.y, 2)
     );
-  }
+  };
 
   /**
-   * GET CLOSEST VERTICES
+   *
+   * @param {*} vertices
+   * @param {*} vertex
+   * @param {*} count
    */
-  getClosestVertices(vertices, vertex, count) {
+  getClosestVertices = (vertices, vertex, count) => {
     return vertices
       .sort((a, b) => {
         return (
@@ -346,41 +378,47 @@ class LcsCnvs {
         );
       })
       .slice(0, count);
-  }
+  };
 
   /**
-   * GET RANDOM NUMBER BETWEEN
+   *
+   * @param {*} min
+   * @param {*} max
    */
-  getRandomNumberBetween(min, max) {
+  getRandomNumberBetween = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
-  }
+  };
 
   /**
-   * GET RANDOM VERTEX
+   *
+   * @param {*} area
    */
-  getRandomVertex(area) {
+  getRandomVertex = area => {
     return {
       x: this.getRandomNumberBetween(area[0].x, area[1].x),
       y: this.getRandomNumberBetween(area[0].y, area[1].y)
     };
-  }
+  };
 
   /**
-   * IS VERTEX IN CANVAS
+   *
+   * @param {*} vertex
+   * @param {*} area
    */
-  isVertexInArea(vertex, area) {
+  isVertexInArea = (vertex, area) => {
     return (
       vertex.x > area[0].x &&
       vertex.x < area[1].x &&
       vertex.y > area[0].y &&
       vertex.y < area[1].y
     );
-  }
+  };
 
   /**
-   * GET VERTICES AREA
+   *
+   * @param {*} vertices
    */
-  getVerticesArea(vertices) {
+  getVerticesArea = vertices => {
     let area = [{ x: null, y: null }, { x: null, y: null }];
     for (let vertex of vertices) {
       area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x || vertex.x;
@@ -389,8 +427,12 @@ class LcsCnvs {
       area[1].y = vertex.y > area[1].y ? vertex.y : area[1].y || vertex.y;
     }
     return area;
-  }
+  };
 
+  /**
+   *
+   * @param {*} array
+   */
   getRandomArrayValue = array => {
     return array[Math.floor(Math.random() * array.length)];
   };
