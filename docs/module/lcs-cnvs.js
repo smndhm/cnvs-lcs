@@ -1,17 +1,22 @@
 class LcsCnvs {
   constructor() {
     this.settings = {};
+    this.document = document;
+    if (typeof module !== "undefined" && typeof this.document === "undefined") {
+      const { JSDOM } = require("jsdom");
+      this.document = new JSDOM().window.document;
+    }
   }
 
   /**
    *
    * @param {*} settingsCanvas
    */
-  setCanvas = settingsCanvas => {
+  setCanvas(settingsCanvas) {
     //SETTINGS
     this.settings.canvas = settingsCanvas;
     //CANVAS
-    this.canvas = document.createElement("canvas"); //TODO: check for document
+    this.canvas = this.document.createElement("canvas"); //TODO: check for document
     //CANVAS SIZES
     this.canvas.width = this.settings.canvas.width;
     this.canvas.height = this.settings.canvas.height;
@@ -27,13 +32,13 @@ class LcsCnvs {
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
     return this;
-  };
+  }
 
   /**
    *
    * @param {*} settingPolygon
    */
-  drawTriangleAfterNewVertex = settingPolygon => {
+  drawTriangleAfterNewVertex(settingPolygon) {
     //SETTINGS
     this.settings.polygon = settingPolygon;
 
@@ -69,13 +74,13 @@ class LcsCnvs {
       this.drawPolygon(polygon, this.getColor(this.settings.polygon.color));
     }
     return this;
-  };
+  }
 
   /**
    *
    * @param {*} settingPolygon
    */
-  drawTriangleForEachVertex = settingPolygon => {
+  drawTriangleForEachVertex(settingPolygon) {
     //SETTINGS
     this.settings.polygon = settingPolygon;
 
@@ -112,13 +117,13 @@ class LcsCnvs {
       );
     }
     return this;
-  };
+  }
 
   /**
    *
    * @param {*} settingPolygon
    */
-  drawTriangleAround = settingPolygon => {
+  drawTriangleAround(settingPolygon) {
     //SETTINGS
     this.settings.polygon = settingPolygon;
     if (!this.settings.polygon.vertex.distance) {
@@ -174,13 +179,13 @@ class LcsCnvs {
       verticesMaxArea[1].y += this.settings.polygon.vertex.distance;
     }
     return this;
-  };
+  }
 
   /**
    *
    * @param {*} settingPolygon
    */
-  drawDelaunay = settingPolygon => {
+  drawDelaunay(settingPolygon) {
     if (typeof Delaunay === "undefined") {
       console.error(
         "You must load Delaunay's script: https://github.com/ironwallaby/delaunay"
@@ -224,17 +229,17 @@ class LcsCnvs {
       );
     }
     return this;
-  };
+  }
 
   /**
    *
    * @param {*} settingImage
    */
-  addImage = settingImage => {
+  addImage(settingImage) {
     this.settings.image = settingImage;
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject) {
       let img = new Image();
-      img.onload = () => {
+      img.onload = function() {
         if (this.settings.image.width) {
           img.height = (img.height * this.settings.image.width) / img.width;
           img.width = this.settings.image.width;
@@ -249,39 +254,39 @@ class LcsCnvs {
         );
         resolve(this);
       };
-      img.onerror = error => {
+      img.onerror = function(error) {
         reject(error);
       };
       img.src = this.settings.image.src;
     });
-  };
+  }
 
   /**
    *
    * @param {*} querySelector
    */
-  append = querySelector => {
-    const element = document.querySelector(querySelector);
+  append(querySelector) {
+    const element = this.document.querySelector(querySelector);
     element.append(this.canvas);
-  };
+  }
 
   /**
    *
    * @param {*} vertex
    */
-  isVertexOnPixel = vertex => {
+  isVertexOnPixel(vertex) {
     return (
       JSON.stringify(
         Array.from(this.ctx.getImageData(vertex.x, vertex.y, 1, 1).data)
       ) !== JSON.stringify(Array.from([0, 0, 0, 0]))
     );
-  };
+  }
 
   /**
    *
    * @param {*} vertex
    */
-  isVertexOnPosition = vertex => {
+  isVertexOnPosition(vertex) {
     return (
       typeof this.settings.polygon.vertex.onPixel !== "undefined" &&
       ((this.settings.polygon.vertex.onPixel === false &&
@@ -289,14 +294,14 @@ class LcsCnvs {
         (this.settings.polygon.vertex.onPixel === true &&
           !this.isVertexOnPixel(vertex)))
     );
-  };
+  }
 
   /**
    *
    * @param {*} color
    * @param {*} area
    */
-  getColor = (color, area) => {
+  getColor(color, area) {
     if (Array.isArray(color)) {
       return this.getRandomArrayValue(color);
     } else if (typeof color === "object") {
@@ -313,14 +318,14 @@ class LcsCnvs {
     } else {
       return color;
     }
-  };
+  }
 
   /**
    *
    * @param {*} vertices
    * @param {*} color
    */
-  drawPolygon = (vertices, color) => {
+  drawPolygon(vertices, color) {
     //STROKE COLOR
     this.ctx.strokeStyle = this.getColor(this.settings.polygon.line.color, [
       { x: 0, y: this.settings.canvas.padding },
@@ -350,18 +355,18 @@ class LcsCnvs {
       }
     }
     this.ctx.stroke();
-  };
+  }
 
   /**
    *
    * @param {*} vertexA
    * @param {*} vertexB
    */
-  getVerticesDistance = (vertexA, vertexB) => {
+  getVerticesDistance(vertexA, vertexB) {
     return (
       Math.pow(vertexA.x - vertexB.x, 2) + Math.pow(vertexA.y - vertexB.y, 2)
     );
-  };
+  }
 
   /**
    *
@@ -369,7 +374,7 @@ class LcsCnvs {
    * @param {*} vertex
    * @param {*} count
    */
-  getClosestVertices = (vertices, vertex, count) => {
+  getClosestVertices(vertices, vertex, count) {
     return vertices
       .sort((a, b) => {
         return (
@@ -378,47 +383,47 @@ class LcsCnvs {
         );
       })
       .slice(0, count);
-  };
+  }
 
   /**
    *
    * @param {*} min
    * @param {*} max
    */
-  getRandomNumberBetween = (min, max) => {
+  getRandomNumberBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
-  };
+  }
 
   /**
    *
    * @param {*} area
    */
-  getRandomVertex = area => {
+  getRandomVertex(area) {
     return {
       x: this.getRandomNumberBetween(area[0].x, area[1].x),
       y: this.getRandomNumberBetween(area[0].y, area[1].y)
     };
-  };
+  }
 
   /**
    *
    * @param {*} vertex
    * @param {*} area
    */
-  isVertexInArea = (vertex, area) => {
+  isVertexInArea(vertex, area) {
     return (
       vertex.x > area[0].x &&
       vertex.x < area[1].x &&
       vertex.y > area[0].y &&
       vertex.y < area[1].y
     );
-  };
+  }
 
   /**
    *
    * @param {*} vertices
    */
-  getVerticesArea = vertices => {
+  getVerticesArea(vertices) {
     let area = [{ x: null, y: null }, { x: null, y: null }];
     for (let vertex of vertices) {
       area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x || vertex.x;
@@ -427,13 +432,14 @@ class LcsCnvs {
       area[1].y = vertex.y > area[1].y ? vertex.y : area[1].y || vertex.y;
     }
     return area;
-  };
+  }
 
   /**
    *
    * @param {*} array
    */
-  getRandomArrayValue = array => {
+  getRandomArrayValue(array) {
     return array[Math.floor(Math.random() * array.length)];
-  };
+  }
 }
+if (typeof module !== "undefined") module.exports = LcsCnvs;

@@ -1,5 +1,5 @@
 /**
- * BASIC EXAMPLE
+ * test file
  */
 
 document.addEventListener("DOMContentLoaded", event => {
@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", event => {
   let settings = {
     canvas: {
       //canvas settings
-      width: 300,
-      height: 300,
-      padding: -15, //padding can be negative
-      fill: "#ffffff" //background color
+      width: 2100,
+      height: 2970,
+      padding: -100 //padding can be negative
+      // fill: "#ffffff" //background color
     },
     polygon: {
       color: ["#F40080", "#D9048E", "#A6038B", "#7C038C", "#570080"],
@@ -20,17 +20,38 @@ document.addEventListener("DOMContentLoaded", event => {
         join: "round"
       },
       vertex: {
-        nb: 300, //number of vertex
-        distance: 3
+        nb: 30000, //number of vertex
+        distance: 2,
+        onPixel: false
       }
+    },
+    image: {
+      src: "./img/daron-crew.svg",
+      width: 1520
     }
   };
   console.log(settings);
 
   // Dessin
-  const monDessin = new LcsCnvs();
-  monDessin
+  const monImage = new LcsCnvs();
+  monImage
     .setCanvas(settings.canvas)
-    .drawDelaunay(settings.polygon)
-    .append("body");
+    .addImage(settings.image)
+    .then(image => {
+      const monImg = image // image Loaded
+        .drawTriangleAround(settings.polygon) // Add drawing
+        .canvas.toDataURL(); // to real image
+
+      const maFeuilleBlanche = new LcsCnvs();
+      maFeuilleBlanche
+        .setCanvas({
+          width: 2100,
+          height: 2970,
+          fill: "#ffffff"
+        })
+        .addImage({ src: monImg }) // add created image to blank page
+        .then(canvas => {
+          canvas.append("body"); // display
+        });
+    });
 });
