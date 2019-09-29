@@ -1,10 +1,11 @@
 class LcsCnvs {
   constructor() {
     this.settings = {};
-    this.document = document;
     if (typeof module !== "undefined" && typeof this.document === "undefined") {
       const { JSDOM } = require("jsdom");
       this.document = new JSDOM().window.document;
+    } else {
+      this.document = document;
     }
   }
 
