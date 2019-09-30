@@ -161,7 +161,10 @@ If defined, it will condition if vertex must be positionned on used pixel (`true
 
 ## Example
 
-[Here some code examples](docs/js) and [here a demo](https://smndhm.github.io/lcs-cnvs/).
+The API can be used in script in your browser and in [Node.js](https://nodejs.org/).  
+**For Node.js, your project require [jsdom](https://www.npmjs.com/package/jsdom) and [canvas](https://www.npmjs.com/package/canvas).**
+
+[Here some code examples](docs/js).
 
 ## next
 
