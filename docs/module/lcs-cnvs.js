@@ -239,12 +239,18 @@ class LcsCnvs {
    */
   addImage(settingImage) {
     this.settings.image = settingImage;
-    if (this.isModule) {
-      loadImage(this.settings.image.src).then(img => {
-        this.drawImage(img);
-      });
-    } else {
-      return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      if (this.isModule) {
+        try {
+          const { loadImage } = require("canvas");
+          loadImage(this.settings.image.src).then(img => {
+            this.drawImage(img);
+            resolve(this);
+          });
+        } catch (error) {
+          reject(error);
+        }
+      } else {
         let img = new Image();
         img.onload = () => {
           this.drawImage(img);
@@ -254,8 +260,8 @@ class LcsCnvs {
           reject(error);
         };
         img.src = this.settings.image.src;
-      });
-    }
+      }
+    });
   }
 
   /**

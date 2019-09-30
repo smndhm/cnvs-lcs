@@ -8,7 +8,7 @@ monImage
     padding: 100
   })
   .addImage({
-    src: "./img/daron-crew.svg",
+    src: "./docs/img/daron-crew.svg",
     width: 1520
   })
   .then(image => {
