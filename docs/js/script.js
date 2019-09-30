@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", event => {
         join: "round"
       },
       vertex: {
-        nb: 30000, //number of vertex
+        nb: 5000, //number of vertex
         distance: 2,
         onPixel: false
       }

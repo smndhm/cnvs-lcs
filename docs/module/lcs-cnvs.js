@@ -1,7 +1,8 @@
 class LcsCnvs {
   constructor() {
     this.settings = {};
-    if (typeof module !== "undefined" && typeof this.document === "undefined") {
+    this.isModule = typeof module !== "undefined";
+    if (this.isModule && typeof this.document === "undefined") {
       const { JSDOM } = require("jsdom");
       this.document = new JSDOM().window.document;
     } else {
@@ -17,7 +18,7 @@ class LcsCnvs {
     //SETTINGS
     this.settings.canvas = settingsCanvas;
     //CANVAS
-    this.canvas = this.document.createElement("canvas"); //TODO: check for document
+    this.canvas = this.document.createElement("canvas");
     //CANVAS SIZES
     this.canvas.width = this.settings.canvas.width;
     this.canvas.height = this.settings.canvas.height;
@@ -237,10 +238,10 @@ class LcsCnvs {
    * @param {*} settingImage
    */
   addImage(settingImage) {
-    this.settings.image = settingImage;
-    return new Promise(function(resolve, reject) {
+    this.settings.image = settingImage; //TODO: load image based on module or browser
+    return new Promise((resolve, reject) => {
       let img = new Image();
-      img.onload = function() {
+      img.onload = () => {
         if (this.settings.image.width) {
           img.height = (img.height * this.settings.image.width) / img.width;
           img.width = this.settings.image.width;
@@ -255,7 +256,7 @@ class LcsCnvs {
         );
         resolve(this);
       };
-      img.onerror = function(error) {
+      img.onerror = error => {
         reject(error);
       };
       img.src = this.settings.image.src;
