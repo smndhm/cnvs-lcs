@@ -238,29 +238,43 @@ class LcsCnvs {
    * @param {*} settingImage
    */
   addImage(settingImage) {
-    this.settings.image = settingImage; //TODO: load image based on module or browser
-    return new Promise((resolve, reject) => {
-      let img = new Image();
-      img.onload = () => {
-        if (this.settings.image.width) {
-          img.height = (img.height * this.settings.image.width) / img.width;
-          img.width = this.settings.image.width;
-        }
-        //draw centered image
-        this.ctx.drawImage(
-          img,
-          (this.canvas.width - img.width) / 2,
-          (this.canvas.height - img.height) / 2,
-          img.width,
-          img.height
-        );
-        resolve(this);
-      };
-      img.onerror = error => {
-        reject(error);
-      };
-      img.src = this.settings.image.src;
-    });
+    this.settings.image = settingImage;
+    if (this.isModule) {
+      loadImage(this.settings.image.src).then(img => {
+        this.drawImage(img);
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = () => {
+          this.drawImage(img);
+          resolve(this);
+        };
+        img.onerror = error => {
+          reject(error);
+        };
+        img.src = this.settings.image.src;
+      });
+    }
+  }
+
+  /**
+   *
+   * @param {*} image
+   */
+  drawImage(image) {
+    if (this.settings.image.width) {
+      image.height = (image.height * this.settings.image.width) / image.width;
+      image.width = this.settings.image.width;
+    }
+    //draw centered image
+    this.ctx.drawImage(
+      image,
+      (this.canvas.width - image.width) / 2,
+      (this.canvas.height - image.height) / 2,
+      image.width,
+      image.height
+    );
   }
 
   /**
