@@ -8,8 +8,8 @@ monImage
     padding: 100
   })
   .addImage({
-    src: "./docs/img/daron-crew.svg",
-    width: 1520
+    src: "./docs/img/circle.svg",
+    width: 1500
   })
   .then(image => {
     const monGribouillis = image
@@ -21,12 +21,11 @@ monImage
           join: "round"
         },
         vertex: {
-          nb: 12000,
+          nb: 10000,
           onPixel: false
         }
       })
       .canvas.toDataURL();
-    console.log(monGribouillis);
 
     const maFeuilleBlanche = new LcsCnvs();
     maFeuilleBlanche
@@ -41,7 +40,7 @@ monImage
           .toDataURL()
           .replace(/^data:image\/png;base64,/, "");
 
-        require("fs").writeFile("dc.png", imgData, "base64", function(err) {
+        require("fs").writeFile("circle.png", imgData, "base64", function(err) {
           if (err) throw err;
         });
       });

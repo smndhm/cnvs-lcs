@@ -43,6 +43,9 @@ Even if Lucas's drawing wasn't only based on triangles, this is really what I tr
 
 ## API
 
+The API can be used in script in Browser or with [Node.js](https://nodejs.org/).  
+**For Node.js, your project require [`jsdom`](https://www.npmjs.com/package/jsdom) and [`canvas`](https://www.npmjs.com/package/canvas).**
+
 ### Init
 
 First, we need to set a canvas:
@@ -161,10 +164,7 @@ If defined, it will condition if vertex must be positionned on used pixel (`true
 
 ## Example
 
-The API can be used in script in your browser and in [Node.js](https://nodejs.org/).  
-**For Node.js, your project require [jsdom](https://www.npmjs.com/package/jsdom) and [canvas](https://www.npmjs.com/package/canvas).**
-
-[Here some code examples](docs/js).
+[Here some code examples](docs/js) and [Here a demo](https://smndhm.github.io/lcs-cnvs/).
 
 ## next
 
