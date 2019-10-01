@@ -1,4 +1,4 @@
-const LcsCnvs = require("../module/lcs-cnvs");
+const LcsCnvs = require("../docs/module/lcs-cnvs");
 
 const monImage = new LcsCnvs();
 monImage
