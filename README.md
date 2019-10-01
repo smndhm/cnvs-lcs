@@ -1,4 +1,4 @@
-# cnvs-lcs
+# lcs-cnvs
 
 ![Lucas drawing](README/lcs-drw.png "Lucas Drawing")
 
@@ -13,15 +13,11 @@ I've tried several approaches to get there, but as the results where interesting
 | --------------------------- | --------------------------- |
 | ![](README/method-01-a.png) | ![](README/method-01-b.png) |
 
-If we get lucky it can look similar, but I really like the effect when there is a lot of vertices.
-
 ### #2 Add all vertices and then for each vertex draw triangle with closest vertices
 
 | 20 vertices                 | 2000 vertices               |
 | --------------------------- | --------------------------- |
 | ![](README/method-02-a.png) | ![](README/method-02-b.png) |
-
-Nope.
 
 ### #3 Add vertex close to vertices zone and draw triangle with closest vertices
 
@@ -29,15 +25,13 @@ Nope.
 | --------------------------- | --------------------------- |
 | ![](README/method-03-a.png) | ![](README/method-03-b.png) |
 
-Same here, if we're lucky we can get something close.
-
 ### Delaunay!
+
+Since I couldn't find a way to get there I did research and find out [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) and then [this script](https://github.com/ironwallaby/delaunay).
 
 | 20 vertices                 | 2000 vertices               |
 | --------------------------- | --------------------------- |
 | ![](README/method-04-a.png) | ![](README/method-04-b.png) |
-
-Since I couldn't find a way to get there I did research and find out [Delaunay triangulation](https://en.wikipedia.org/wiki/Delaunay_triangulation) and then [this script](https://github.com/ironwallaby/delaunay).
 
 Even if Lucas's drawing wasn't only based on triangles, this is really what I tried to get. **And I have its validation ;)**
 

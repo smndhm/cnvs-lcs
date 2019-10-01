@@ -9,24 +9,22 @@ document.addEventListener("DOMContentLoaded", event => {
       //canvas settings
       width: 2100,
       height: 2970,
-      padding: -100 //padding can be negative
-      // fill: "#ffffff" //background color
+      padding: 100
     },
     polygon: {
-      color: ["#F40080", "#D9048E", "#A6038B", "#7C038C", "#570080"],
       line: {
-        width: 0, //0 to remove border
+        width: 5, //0 to remove border
         cap: "square",
         join: "round"
       },
       vertex: {
         nb: 5000, //number of vertex
         distance: 2,
-        onPixel: false
+        onPixel: true
       }
     },
     image: {
-      src: "./img/daron-crew.svg",
+      src: "./img/circle.svg",
       width: 1520
     }
   };
@@ -39,7 +37,7 @@ document.addEventListener("DOMContentLoaded", event => {
     .addImage(settings.image)
     .then(image => {
       const monImg = image // image Loaded
-        .drawTriangleAround(settings.polygon) // Add drawing
+        .drawTriangleAfterNewVertex(settings.polygon) // Add drawing
         .canvas.toDataURL(); // to real image
 
       const maFeuilleBlanche = new LcsCnvs();
