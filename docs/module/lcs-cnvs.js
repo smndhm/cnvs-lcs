@@ -241,15 +241,15 @@ class LcsCnvs {
     this.settings.image = settingImage;
     return new Promise((resolve, reject) => {
       if (this.isModule) {
-        try {
-          const { loadImage } = require("canvas");
-          loadImage(this.settings.image.src).then(img => {
+        const { loadImage } = require("canvas");
+        loadImage(this.settings.image.src)
+          .then(img => {
             this.drawImage(img);
             resolve(this);
+          })
+          .catch(error => {
+            reject(error);
           });
-        } catch (error) {
-          reject(error);
-        }
       } else {
         let img = new Image();
         img.onload = () => {
