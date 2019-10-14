@@ -1,6 +1,7 @@
 class LcsCnvs {
   constructor() {
     this.settings = {};
+    this.polygons = [];
     this.isModule = typeof module !== "undefined";
     if (this.isModule && typeof this.document === "undefined") {
       const { JSDOM } = require("jsdom");
@@ -72,8 +73,10 @@ class LcsCnvs {
       }
       vertices.add(vertex);
     }
-    for (const polygon of polygons) {
-      this.drawPolygon(polygon, this.getColor(this.settings.polygon.color));
+    for (const vertices of polygons) {
+      const polygon = { vertices, color: this.getColor(this.settings.polygon.color) };
+      this.polygons.push(polygon);
+      this.drawPolygon(polygon);
     }
     return this;
   }
@@ -292,6 +295,42 @@ class LcsCnvs {
     element.append(this.canvas);
   }
 
+  exportFrames() {
+    const fs = require("fs");
+    const fsPromises = fs.promises;
+    (async () => {
+      for await (const polygon of this.polygons) {
+        this.drawPolygon(polygon);
+        const canvas = this.document.createElement("canvas");
+        canvas.width = this.canvas.width;
+        canvas.height = this.canvas.height;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          this.canvas,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        const filename = `output/daron-crew-${Date.now()}.png`;
+        try {
+          console.log(filename);
+          await fsPromises.writeFile(
+            filename,
+            canvas.toDataURL().replace(/^data:image\/png;base64,/, ""),
+            "base64"
+          );
+          console.log("done");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    })();
+    return this;
+  }
+
   /**
    *
    * @param {*} vertex
@@ -347,7 +386,7 @@ class LcsCnvs {
    * @param {*} vertices
    * @param {*} color
    */
-  drawPolygon(vertices, color) {
+  drawPolygon({ vertices, color }) {
     //STROKE COLOR
     this.ctx.strokeStyle = this.getColor(this.settings.polygon.line.color, [
       { x: 0, y: this.settings.canvas.padding },

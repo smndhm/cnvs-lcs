@@ -45,20 +45,32 @@ JSDOM.fromFile("./docs/img/daron-crew.svg").then(dom => {
             console.log(`#5.${i}`);
             const monGribouillis = image
               .drawTriangleAfterNewVertex({
+                blendingMode: "multiply",
                 line: {
-                  color: "#000000",
                   width: 5,
                   cap: "square",
                   join: "round"
                 },
                 vertex: {
-                  nb: 1000,
-                  onPixel: true
+                  nb: 200,
+                  onPixel: false
                 }
               })
               .canvas.toDataURL();
 
-            maFeuilleBlanche.addImage({ src: monGribouillis });
+            maFeuilleBlanche.addImage({ src: monGribouillis }).then(image => {
+              fs.writeFile(
+                `draw.${i}.png`,
+                image.canvas
+                  .toDataURL()
+                  .replace(/^data:image\/png;base64,/, ""),
+                "base64",
+                function(err) {
+                  if (err) throw err;
+                  console.log(`#8.${i}`);
+                }
+              );
+            });
 
             console.log(`#6.${i}`);
           })
@@ -68,19 +80,19 @@ JSDOM.fromFile("./docs/img/daron-crew.svg").then(dom => {
       });
     }
 
-    console.log(`#7`);
-    fs.writeFile(
-      "draw.png",
-      maFeuilleBlanche.canvas
-        .toDataURL()
-        .replace(/^data:image\/png;base64,/, ""),
-      "base64",
-      function(err) {
-        if (err) throw err;
-        console.log(`#8`);
-      }
-    );
-    console.log(`#9`);
+    // console.log(`#7`);
+    // fs.writeFile(
+    //   "draw.png",
+    //   maFeuilleBlanche.canvas
+    //     .toDataURL()
+    //     .replace(/^data:image\/png;base64,/, ""),
+    //   "base64",
+    //   function(err) {
+    //     if (err) throw err;
+    //     console.log(`#8`);
+    //   }
+    // );
+    // console.log(`#9`);
   })();
-  console.log(`#10`);
+  // console.log(`#10`);
 });

@@ -3,16 +3,16 @@ const LcsCnvs = require("../docs/module/lcs-cnvs");
 const monImage = new LcsCnvs();
 monImage
   .setCanvas({
-    width: 2100,
-    height: 2970,
-    padding: 100
+    width: 1080,
+    height: 1920,
+    padding: 40
   })
   .addImage({
-    src: "./docs/img/circle.svg",
-    width: 1500
+    src: "./docs/img/daron-crew.svg",
+    width: 760
   })
   .then(image => {
-    const monGribouillis = image
+    image
       .drawTriangleAfterNewVertex({
         line: {
           color: "#000000",
@@ -21,29 +21,10 @@ monImage
           join: "round"
         },
         vertex: {
-          nb: 10000,
+          nb: 4000,
           onPixel: false
         }
-      })
-      .canvas.toDataURL();
-
-    const maFeuilleBlanche = new LcsCnvs();
-    maFeuilleBlanche
-      .setCanvas({
-        width: 2100,
-        height: 2970,
-        fill: "#ffffff"
-      })
-      .addImage({ src: monGribouillis })
-      .then(monCollage => {
-        const imgData = monCollage.canvas
-          .toDataURL()
-          .replace(/^data:image\/png;base64,/, "");
-
-        require("fs").writeFile("circle.png", imgData, "base64", function(err) {
-          if (err) throw err;
-        });
-      });
+      }).exportFrames();
   })
   .catch(err => {
     console.error(err);
