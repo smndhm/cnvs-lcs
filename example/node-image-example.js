@@ -13,7 +13,7 @@ monImage
   })
   .then(image => {
     image
-      .drawTriangleAfterNewVertex({
+      .drawTriangleAround({
         line: {
           color: "#000000",
           width: 5,
@@ -21,8 +21,9 @@ monImage
           join: "round"
         },
         vertex: {
-          nb: 4000,
-          onPixel: false
+          nb: 20,
+          onPixel: false,
+          distance: 100
         }
       }).exportFrames();
   })
