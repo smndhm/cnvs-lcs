@@ -283,18 +283,28 @@ class LcsCnvs {
     element.append(this.canvas);
   }
 
-  exportFrames() {
+  exportFrames(settingExport) {
     const fs = require("fs");
     const fsPromises = fs.promises;
     (async () => {
       for await (const polygon of this.polygons) {
         this.drawPolygon(polygon.vertices, polygon.color, false);
+        //CANVAS
         const canvas = this.document.createElement("canvas");
-        canvas.width = this.canvas.width;
-        canvas.height = this.canvas.height;
+        //CANVAS SIZES
+        canvas.width = this.settings.canvas.width;
+        canvas.height = this.settings.canvas.height;
+        //CTX
         const ctx = canvas.getContext("2d");
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        //FILL COLOR
+        if (settingExport.fill) {
+          ctx.fillStyle = this.getColor(settingExport.fill, [
+            { x: 0, y: 0 },
+            { x: 0, y: canvas.height }
+          ]);
+          //ADD BACKGROUND
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
         ctx.drawImage(
           this.canvas,
           0,
