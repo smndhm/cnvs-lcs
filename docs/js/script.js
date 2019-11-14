@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", event => {
         join: "round"
       },
       vertex: {
-        nb: 5000, //number of vertex
+        nb: 1000, //number of vertex
         distance: 2,
         onPixel: true
       }
@@ -49,7 +49,9 @@ document.addEventListener("DOMContentLoaded", event => {
         })
         .addImage({ src: monImg }) // add created image to blank page
         .then(canvas => {
-          canvas.append("body"); // display
+          canvas.settings.polygon = image.settings.polygon;
+          canvas.polygons = image.polygons;
+          canvas.append("body", 100); // display
         });
     });
 });

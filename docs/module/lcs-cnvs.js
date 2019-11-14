@@ -39,11 +39,11 @@ class LcsCnvs {
 
   /**
    *
-   * @param {*} settingPolygon
+   * @param {*} settingsPolygon
    */
-  drawTriangleAfterNewVertex(settingPolygon) {
+  drawTriangleAfterNewVertex(settingsPolygon) {
     //SETTINGS
-    this.settings.polygon = settingPolygon;
+    this.settings.polygon = settingsPolygon;
     //SET POLYGONS
     let polygons = new Set();
     //SET VERTICES
@@ -73,19 +73,22 @@ class LcsCnvs {
       vertices.add(vertex);
     }
     //DRAW POLYGONS
-    for (const vertices of polygons) {
-      this.drawPolygon(vertices, this.getColor(this.settings.polygon.color));
+    for (const polygon of polygons) {
+      this.polygons.push({
+        vertices: polygon,
+        color: this.getColor(this.settings.polygon.color)
+      });
     }
     return this;
   }
 
   /**
    *
-   * @param {*} settingPolygon
+   * @param {*} settingsPolygon
    */
-  drawTriangleForEachVertex(settingPolygon) {
+  drawTriangleForEachVertex(settingsPolygon) {
     //SETTINGS
-    this.settings.polygon = settingPolygon;
+    this.settings.polygon = settingsPolygon;
     //SET VERTICES
     let vertices = new Set();
     for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
@@ -113,18 +116,21 @@ class LcsCnvs {
         vertex,
         2
       );
-      this.drawPolygon([vertex].concat(closestVertices), this.getColor(this.settings.polygon.color));
+      this.polygons.push({
+        vertices: [vertex].concat(closestVertices),
+        color: this.getColor(this.settings.polygon.color)
+      });
     }
     return this;
   }
 
   /**
    *
-   * @param {*} settingPolygon
+   * @param {*} settingsPolygon
    */
-  drawTriangleAround(settingPolygon) {
+  drawTriangleAround(settingsPolygon) {
     //SETTINGS
-    this.settings.polygon = settingPolygon;
+    this.settings.polygon = settingsPolygon;
     //CHECK IF VERTEX DISTANCE IS SET
     if (!this.settings.polygon.vertex.distance) {
       console.warn(
@@ -156,14 +162,17 @@ class LcsCnvs {
         !this.isVertexInArea(vertex, canvasArea) ||
         this.isVertexOnPosition(vertex)
       );
-      //SET POLYGONS      
+      //SET POLYGONS
       if (vertices.size >= 2) {
         const closestVertices = this.getClosestVertices(
           [...vertices],
           vertex,
           2
         );
-        this.drawPolygon([vertex].concat(closestVertices), this.getColor(this.settings.polygon.color));
+        this.polygons.push({
+          vertices: [vertex].concat(closestVertices),
+          color: this.getColor(this.settings.polygon.color)
+        });
       }
       vertices.add(vertex);
       verticesArea = this.getVerticesArea(vertices);
@@ -178,9 +187,9 @@ class LcsCnvs {
 
   /**
    *
-   * @param {*} settingPolygon
+   * @param {*} settingsPolygon
    */
-  drawDelaunay(settingPolygon) {
+  drawDelaunay(settingsPolygon) {
     if (!this.isModule && typeof Delaunay === "undefined") {
       console.error(
         "You must load Delaunay's script: https://github.com/ironwallaby/delaunay"
@@ -188,7 +197,7 @@ class LcsCnvs {
       return this;
     }
     //SETTINGS
-    this.settings.polygon = settingPolygon;
+    this.settings.polygon = settingsPolygon;
     //SET VERTICES
     let vertices = new Set();
     for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
@@ -212,24 +221,29 @@ class LcsCnvs {
       return [vertex.x, vertex.y];
     });
     //SET TRIANGLES
-    const triangles = this.isModule ? require('./delaunay').triangulate(verticesArray) : Delaunay.triangulate(verticesArray);
+    const triangles = this.isModule
+      ? require("./delaunay").triangulate(verticesArray)
+      : Delaunay.triangulate(verticesArray);
     //SET POLYGONS
     for (var i = 0; i < triangles.length; i += 3) {
-      this.drawPolygon([
-        [...vertices][triangles[i]],
-        [...vertices][triangles[i + 1]],
-        [...vertices][triangles[i + 2]]
-      ], this.getColor(this.settings.polygon.color));
+      this.polygons.push({
+        vertices: [
+          [...vertices][triangles[i]],
+          [...vertices][triangles[i + 1]],
+          [...vertices][triangles[i + 2]]
+        ],
+        color: this.getColor(this.settings.polygon.color)
+      });
     }
     return this;
   }
 
   /**
    *
-   * @param {*} settingImage
+   * @param {*} settingsImage
    */
-  addImage(settingImage) {
-    this.settings.image = settingImage;
+  addImage(settingsImage) {
+    this.settings.image = settingsImage;
     return new Promise((resolve, reject) => {
       if (this.isModule) {
         const { loadImage } = require("canvas");
@@ -278,51 +292,74 @@ class LcsCnvs {
    *
    * @param {*} querySelector
    */
-  append(querySelector) {
+  append(querySelector, interval = 0) {
     const element = this.document.querySelector(querySelector);
     element.append(this.canvas);
+    (async () => {
+      for (const polygon of this.polygons) {
+        this.drawPolygon(polygon.vertices, polygon.color);
+        if (interval) {
+          await new Promise(resolve => setTimeout(resolve, interval));
+        }
+      }
+    })();
   }
 
-  exportFrames(settingExport) {
+  export(settingsExport) {
+    const path = require("path");
     const fs = require("fs");
     const fsPromises = fs.promises;
+    // PATH
+    if (!settingsExport.path) {
+      settingsExport.path = "output";
+    }
+    settingsExport.path = path.normalize(settingsExport.path);
+    if (!fs.existsSync(settingsExport.path)) {
+      fs.mkdirSync(settingsExport.path);
+    }
+    // FILENAME
+    if (!settingsExport.filename) {
+      settingsExport.filename = "";
+    }
+    // EXPORT FRAMES
     (async () => {
-      for await (const polygon of this.polygons) {
-        this.drawPolygon(polygon.vertices, polygon.color, false);
-        //CANVAS
+      for await (const [i, polygon] of this.polygons.entries()) {
+        // CANVAS
         const canvas = this.document.createElement("canvas");
-        //CANVAS SIZES
+        // CANVAS SIZES
         canvas.width = this.settings.canvas.width;
         canvas.height = this.settings.canvas.height;
-        //CTX
+        // CTX
         const ctx = canvas.getContext("2d");
-        //FILL COLOR
-        if (settingExport.fill) {
-          ctx.fillStyle = this.getColor(settingExport.fill, [
+        // FILL COLOR
+        if (settingsExport.fill) {
+          ctx.fillStyle = this.getColor(settingsExport.fill, [
             { x: 0, y: 0 },
             { x: 0, y: canvas.height }
           ]);
-          //ADD BACKGROUND
+          // ADD BACKGROUND
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-        ctx.drawImage(
-          this.canvas,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        const filename = `output/daron-crew-${Date.now()}.png`;
-        try {
-          console.log(filename);
-          await fsPromises.writeFile(
-            filename,
-            canvas.toDataURL().replace(/^data:image\/png;base64,/, ""),
-            "base64"
-          );
-          console.log("done");
-        } catch (error) {
-          console.error(error);
+        // ADD POLYGON
+        this.drawPolygon(polygon.vertices, polygon.color);
+        // ADD POLYGONS TO EXPORT CANVAS
+        ctx.drawImage(this.canvas, 0, 0, canvas.width, canvas.height);
+
+        if (settingsExport.allFrames || this.polygons.length - 1 === i) {
+          // EXPORT
+          const fileExport = `${settingsExport.path}/${
+            settingsExport.filename
+          }-${Date.now()}.png`;
+          try {
+            await fsPromises.writeFile(
+              fileExport,
+              canvas.toDataURL().replace(/^data:image\/png;base64,/, ""),
+              "base64"
+            );
+            console.log((i+1), fileExport);
+          } catch (error) {
+            console.error(error);
+          }
         }
       }
     })();
@@ -335,6 +372,7 @@ class LcsCnvs {
    */
   isVertexOnPixel(vertex) {
     return (
+      vertex.x >= 0 && vertex.y >= 0 &&
       JSON.stringify(
         Array.from(this.ctx.getImageData(vertex.x, vertex.y, 1, 1).data)
       ) !== JSON.stringify(Array.from([0, 0, 0, 0]))
@@ -384,11 +422,7 @@ class LcsCnvs {
    * @param {*} vertices
    * @param {*} color
    */
-  drawPolygon(vertices, color, addPolygon = true) {
-    //SAVE POLYGONE
-    if (addPolygon) {
-      this.polygons.push({ vertices, color });
-    }
+  drawPolygon(vertices, color) {
     //STROKE COLOR
     this.ctx.strokeStyle = this.getColor(this.settings.polygon.line.color, [
       { x: 0, y: this.settings.canvas.padding },

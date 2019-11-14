@@ -8,25 +8,28 @@ monImage
     padding: 40
   })
   .addImage({
-    src: "./docs/img/daron-crew.svg",
+    src: "./docs/img/daron-crew.svg", // path to image
     width: 760
   })
   .then(image => {
     image
-      .drawTriangleAround({
+      .drawTriangleAfterNewVertex({
+        blendingMode: "multiply",
         line: {
-          color: "#000000",
-          width: 5,
+          color: "rgba(0, 0, 0, .25)",
+          width: 5, //0 to remove border
           cap: "square",
           join: "round"
         },
         vertex: {
-          nb: 20,
           onPixel: false,
-          distance: 100
+          nb: 12000 //number of vertex
         }
-      }).exportFrames();
-  })
-  .catch(err => {
-    console.error(err);
+      })
+      .export({
+        allFrames: false,
+        fill: "#ffffff",
+        path: "output",
+        filename: "daron-crew-lines"
+      });
   });
