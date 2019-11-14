@@ -117,9 +117,9 @@ Here is a polygon setting example:
 
 ### Display
 
-And then, display result:
+And then, <u>in your browser</u>, display result:
 
-#### .append(querySelector[, delay]) 
+#### .append(querySelector[, delay])
 
 **delay** option will create an animation displaying polygons one after one.
 
@@ -127,9 +127,41 @@ And then, display result:
 mySheet.append("body", 100);
 ```
 
-| #1                          | #2                          | #3                          | #4                          |#5                          |
-| --------------------------- | --------------------------- | --------------------------- | --------------------------- |--------------------------- |
-| ![](README/method-01-c.png) | ![](README/method-02-c.png) | ![](README/method-03-c.png) | ![](README/method-04-c.png) |![](README/method-01.gif) |
+Or export file <u>with Node.js</u>:
+
+#### .export([settings])
+
+By default, exported files will go to `output/${timestamp}.png`
+
+```javascript
+const exportSettings = {
+  allFrames: true, // export each frames after adding polygons
+  fill: "#ffffff", // background color
+  path: "export", // export folder
+  filename: "blu" // export filename
+};
+
+mySheet.export(exportSettings);
+
+// files will export to 'export/blu-${timestamp}.png'
+```
+
+**allFrames** option will export all the frames after a new polygon is added.  
+You can use this option to generate video using [FFMpeg](https://www.ffmpeg.org/):
+
+```shell
+ffmpeg -framerate 33  -pattern_type glob -i 'output/*.png' -c:v libx264 -pix_fmt yuv420p -filter:v fps=fps=30 output/gif.mp4
+```
+
+Or a gif using [Convert](https://imagemagick.org/script/convert.php) from [ImageMagick](https://imagemagick.org/):
+
+```shell
+convert output/*.png output/polygons.gif
+```
+
+| #1                          | #2                          | #3                          | #4                          | #5                        |
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- | ------------------------- |
+| ![](README/method-01-c.png) | ![](README/method-02-c.png) | ![](README/method-03-c.png) | ![](README/method-04-c.png) | ![](README/method-01.gif) |
 
 ### Extra
 
