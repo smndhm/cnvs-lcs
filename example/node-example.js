@@ -20,12 +20,5 @@ monImage
     vertex: {
       nb: 500 //number of vertex
     }
-  });
-
-const imgData = monImage.canvas
-  .toDataURL()
-  .replace(/^data:image\/png;base64,/, "");
-
-require("fs").writeFile("out.png", imgData, "base64", function(err) {
-  if (err) throw err;
-});
+  })
+  .export();

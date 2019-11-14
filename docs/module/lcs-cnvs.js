@@ -293,6 +293,10 @@ class LcsCnvs {
    * @param {*} querySelector
    */
   append(querySelector, interval = 0) {
+    if (this.isModule) {
+      console.error("Can't use append in Module");
+      return;
+    }
     const element = this.document.querySelector(querySelector);
     element.append(this.canvas);
     (async () => {
@@ -305,7 +309,11 @@ class LcsCnvs {
     })();
   }
 
-  export(settingsExport) {
+  export(settingsExport = {}) {
+    if (!this.isModule) {
+      console.error("Can't use export in Browser");
+      return;
+    }
     const path = require("path");
     const fs = require("fs");
     const fsPromises = fs.promises;
@@ -320,6 +328,9 @@ class LcsCnvs {
     // FILENAME
     if (!settingsExport.filename) {
       settingsExport.filename = "";
+    }
+    else {
+      settingsExport.filename += "-";
     }
     // EXPORT FRAMES
     (async () => {
@@ -349,14 +360,14 @@ class LcsCnvs {
           // EXPORT
           const fileExport = `${settingsExport.path}/${
             settingsExport.filename
-          }-${Date.now()}.png`;
+          }${Date.now()}.png`;
           try {
             await fsPromises.writeFile(
               fileExport,
               canvas.toDataURL().replace(/^data:image\/png;base64,/, ""),
               "base64"
             );
-            console.log((i+1), fileExport);
+            console.log(i + 1, fileExport);
           } catch (error) {
             console.error(error);
           }
@@ -372,7 +383,8 @@ class LcsCnvs {
    */
   isVertexOnPixel(vertex) {
     return (
-      vertex.x >= 0 && vertex.y >= 0 &&
+      vertex.x >= 0 &&
+      vertex.y >= 0 &&
       JSON.stringify(
         Array.from(this.ctx.getImageData(vertex.x, vertex.y, 1, 1).data)
       ) !== JSON.stringify(Array.from([0, 0, 0, 0]))
@@ -521,7 +533,10 @@ class LcsCnvs {
    * @param {*} vertices
    */
   getVerticesArea(vertices) {
-    let area = [{ x: null, y: null }, { x: null, y: null }];
+    let area = [
+      { x: null, y: null },
+      { x: null, y: null }
+    ];
     for (let vertex of vertices) {
       area[0].x = vertex.x < area[0].x ? vertex.x : area[0].x || vertex.x;
       area[0].y = vertex.y < area[0].y ? vertex.y : area[0].y || vertex.y;

@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", event => {
         .then(canvas => {
           canvas.settings.polygon = image.settings.polygon;
           canvas.polygons = image.polygons;
-          canvas.append("body", 100); // display
+          canvas.append("body", 10); // display
         });
     });
 });

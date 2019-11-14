@@ -119,15 +119,17 @@ Here is a polygon setting example:
 
 And then, display result:
 
-#### .append(querySelector)
+#### .append(querySelector[, delay]) 
+
+**delay** option will create an animation displaying polygons one after one.
 
 ```javascript
-mySheet.append("body");
+mySheet.append("body", 100);
 ```
 
-| #1                          | #2                          | #3                          | #4                          |
-| --------------------------- | --------------------------- | --------------------------- | --------------------------- |
-| ![](README/method-01-c.png) | ![](README/method-02-c.png) | ![](README/method-03-c.png) | ![](README/method-04-c.png) |
+| #1                          | #2                          | #3                          | #4                          |#5                          |
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- |--------------------------- |
+| ![](README/method-01-c.png) | ![](README/method-02-c.png) | ![](README/method-03-c.png) | ![](README/method-04-c.png) |![](README/method-01.gif) |
 
 ### Extra
 

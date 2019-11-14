@@ -49,6 +49,8 @@ document.addEventListener("DOMContentLoaded", event => {
         })
         .addImage({ src: monImg }) // add created image to blank page
         .then(canvas => {
+          canvas.settings.polygon = image.settings.polygon;
+          canvas.polygons = image.polygons;
           canvas.append("body"); // display
         });
     });
