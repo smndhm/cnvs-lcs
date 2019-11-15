@@ -3,48 +3,33 @@ const LcsCnvs = require("../docs/module/lcs-cnvs");
 const monImage = new LcsCnvs();
 monImage
   .setCanvas({
-    width: 2100,
-    height: 2970,
-    padding: 100
+    width: 1080,
+    height: 1920,
+    padding: 40
   })
   .addImage({
-    src: "./docs/img/circle.svg",
-    width: 1500
+    src: "./docs/img/daron-crew.svg", // path to image
+    width: 760
   })
   .then(image => {
-    const monGribouillis = image
+    image
       .drawTriangleAfterNewVertex({
+        blendingMode: "multiply",
         line: {
-          color: "#000000",
-          width: 5,
+          color: "rgba(0, 0, 0, .25)",
+          width: 5, //0 to remove border
           cap: "square",
           join: "round"
         },
         vertex: {
-          nb: 10000,
-          onPixel: false
+          onPixel: false,
+          nb: 12000 //number of vertex
         }
       })
-      .canvas.toDataURL();
-
-    const maFeuilleBlanche = new LcsCnvs();
-    maFeuilleBlanche
-      .setCanvas({
-        width: 2100,
-        height: 2970,
-        fill: "#ffffff"
-      })
-      .addImage({ src: monGribouillis })
-      .then(monCollage => {
-        const imgData = monCollage.canvas
-          .toDataURL()
-          .replace(/^data:image\/png;base64,/, "");
-
-        require("fs").writeFile("circle.png", imgData, "base64", function(err) {
-          if (err) throw err;
-        });
+      .export({
+        allFrames: false,
+        fill: "#ffffff",
+        path: "output",
+        filename: "daron-crew-lines"
       });
-  })
-  .catch(err => {
-    console.error(err);
   });
