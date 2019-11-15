@@ -192,7 +192,7 @@ If defined, it will condition if vertex must be positionned on used pixel (`true
 
 ## Example
 
-[Here some code examples](docs/js) and [Here a demo](https://smndhm.github.io/lcs-cnvs/).
+[Here some code examples](example) and [Here a demo](https://smndhm.github.io/lcs-cnvs/).
 
 ## next
 
