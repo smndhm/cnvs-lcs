@@ -238,6 +238,68 @@ class LcsCnvs {
     return this;
   }
 
+  drawPop(settingsPolygon) {
+    //SETTINGS
+    this.settings.polygon = settingsPolygon;
+    // CHECK IF AN IMAGE IS ALREADY LOADED
+    if (!this.settings.image) {
+      console.error("An image must be loaded first.");
+      return this;
+    }
+    //CHECK IF VERTEX DISTANCE IS SET
+    if (!this.settings.polygon.vertex.distance) {
+      const distance =
+        (this.settings.image.width < this.settings.image.height
+          ? this.settings.image.width
+          : this.settings.image.height) / 2;
+      console.warn(
+        `this.settings.polygon.vertex.distance not set, auto set at ${distance}`
+      );
+      this.settings.polygon.vertex.distance = distance;
+    }
+    //SET POLYGONS
+    let polygons = new Set();
+    //SET AREA
+    const area = [
+      {
+        x:
+          this.settings.image.area[0].x - this.settings.polygon.vertex.distance,
+        y: this.settings.image.area[0].y - this.settings.polygon.vertex.distance
+      },
+      {
+        x:
+          this.settings.image.area[1].x + this.settings.polygon.vertex.distance,
+        y: this.settings.image.area[1].y + this.settings.polygon.vertex.distance
+      }
+    ];
+    for (let i = 0; i < this.settings.polygon.vertex.nb; i++) {
+      // first in pixel vertex
+      let vertexIn1;
+      do {
+        vertexIn1 = this.getRandomVertex(area);
+      } while (!this.isVertexOnPixel(vertexIn1));
+      // second in pixel vertex
+      let vertexIn2;
+      do {
+        vertexIn2 = this.getRandomVertex(area);
+      } while (!this.isVertexOnPixel(vertexIn2));
+      // third out pixel vertex
+      let vertexOut;
+      do {
+        vertexOut = this.getRandomVertex(area);
+      } while (this.isVertexOnPixel(vertexOut));
+      polygons.add([vertexIn1, vertexIn2, vertexOut]);
+    }
+    //DRAW POLYGONS
+    for (const polygon of polygons) {
+      this.polygons.push({
+        vertices: polygon,
+        color: this.getColor(this.settings.polygon.color)
+      });
+    }
+    return this;
+  }
+
   /**
    *
    * @param {*} settingsImage
@@ -278,14 +340,34 @@ class LcsCnvs {
       image.height = (image.height * this.settings.image.width) / image.width;
       image.width = this.settings.image.width;
     }
+    //add data to image setting
+    this.settings.image.width = image.width;
+    this.settings.image.height = image.height;
+    this.settings.image.area = [
+      {
+        x: (this.canvas.width - image.width) / 2,
+        y: (this.canvas.height - image.height) / 2
+      },
+      {
+        x: (this.canvas.width - image.width) / 2 + image.width,
+        y: (this.canvas.height - image.height) / 2 + image.height
+      }
+    ];
     //draw centered image
     this.ctx.drawImage(
       image,
-      (this.canvas.width - image.width) / 2,
-      (this.canvas.height - image.height) / 2,
+      this.settings.image.area[0].x,
+      this.settings.image.area[0].y,
       image.width,
       image.height
     );
+  }
+
+  drawPolygons() {
+    for (const polygon of this.polygons) {
+      this.drawPolygon(polygon.vertices, polygon.color);
+    }
+    return this;
   }
 
   /**
@@ -328,8 +410,7 @@ class LcsCnvs {
     // FILENAME
     if (!settingsExport.filename) {
       settingsExport.filename = "";
-    }
-    else {
+    } else {
       settingsExport.filename += "-";
     }
     // EXPORT FRAMES
